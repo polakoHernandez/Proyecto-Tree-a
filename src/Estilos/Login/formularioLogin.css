@@ -1,0 +1,141 @@
+.container-cabecera {
+  width: 100%;
+
+  height: 10vh;
+  border-radius: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo-tree-formulario {
+  width: 100px;
+  height: 70px;
+  border-radius: 30px;
+  margin-left: 5px;
+}
+
+.cerrar {
+  margin-right: 20px;
+  margin-top: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.container-mensaje-bienvenido {
+  width: 100%;
+
+  height: 30vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.mensaje-bienvenido {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 30px;
+  margin-top: 5px;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+}
+
+.container-avatar-user {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-user {
+  width: 100px;
+  height: 100px;
+}
+
+.container-inputs {
+  width: 100%;
+
+  height: 20vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.container-input-icon {
+  position: relative;
+}
+
+.icon-email {
+  position: absolute;
+  right: 30px;
+  bottom: 25px;
+}
+
+.container-input-pass {
+  position: relative;
+}
+
+.icon-password {
+  position: absolute;
+  right: 30px;
+  bottom: 25px;
+}
+
+.input-form {
+  width: 85%;
+  height: 7vh;
+  margin-left: 5%;
+  border: solid 1.5px rgb(0, 164, 228);
+  border-radius: 5px;
+  margin-bottom: 15px;
+  padding-left: 15px;
+}
+
+.container-boton-msg {
+  width: 100%;
+  /* background-color: bisque; */
+  height: 15vh;
+}
+
+.button-sesion {
+  background-color: rgb(0, 164, 228);
+  width: 90%;
+  height: 7vh;
+  margin-left: 5%;
+  border: none;
+  border-radius: 5px;
+  font-family: "Nunito Sans", sans-serif;
+  color: white;
+  cursor: pointer;
+}
+
+.msg-olvido {
+  font-family: "Nunito Sans", sans-serif;
+  color: rgb(0, 164, 228);
+  margin-top: 10px;
+}
+
+.container-logos-msg {
+  width: 100%;
+  /* background-color: gray; */
+  height: 15vh;
+  border-radius: 30px;
+}
+
+.msg-conoce-mas {
+  font-family: "Nunito Sans", sans-serif;
+  color: black;
+}
+
+.contenedor-logos {
+  /* background-color: red; */
+  width: 40%;
+  margin-left: 30%;
+  margin-top: -10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.icon-social {
+  color: black;
+}
+
+.icon-social:hover {
+  color: gray;
+}

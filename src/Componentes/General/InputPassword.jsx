@@ -1,19 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, TextField, InputLabel } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-function InputGeneral({
-  label,
-  placeholder,
-  icon,
-  name,
-  type,
-  onChange,
-  ref,
-  value,
-}) {
+function InputPassword({ label, placeholder, name, onChange }) {
   const [see, setSee] = useState(false);
   const theme = createTheme({
     palette: {
@@ -39,16 +32,13 @@ function InputGeneral({
         </InputLabel>
         <TextField
           // disabled={estadoBoton}
-          value={value}
-          ref={ref}
           onChange={onChange}
           name={name}
           variant="outlined"
           focused
           placeholder={placeholder}
           color="luva"
-          type={type}
-          // type={see ? "text" : "password"}
+          type={see ? "text" : "password"}
           sx={{
             width: "90%",
             marginLeft: "5%",
@@ -56,7 +46,7 @@ function InputGeneral({
             borderRadius: "20px",
           }}
           InputProps={{
-            startAdornment: (
+            endAdornment: (
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setSee(!see)}
@@ -66,16 +56,14 @@ function InputGeneral({
                     color: "white",
                     width: "50px",
                     height: "55px",
-                    borderRadius: "5px 0px 0px 5px",
-                    marginLeft: "-22px",
-                    marginRight: "10px",
+                    borderRadius: "0px 0px 0px 0px",
+                    marginRight: "-12px",
                     "&:hover": {
                       backgroundColor: "rgb(0,164,228)",
                     },
                   }}
                 >
-                  {icon}
-                  {/* {see ? <VisibilityIcon /> : <VisibilityOffIcon />} */}
+                  {see ? <VisibilityIcon /> : <VisibilityOffIcon />}
                 </IconButton>
               </InputAdornment>
             ),
@@ -86,4 +74,4 @@ function InputGeneral({
   );
 }
 
-export default InputGeneral;
+export default InputPassword;

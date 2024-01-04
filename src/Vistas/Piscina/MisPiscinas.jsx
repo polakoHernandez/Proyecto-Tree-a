@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Box, Grid, Typography, IconButton } from "@mui/material";
 import SearchAppBar from "../../Componentes/General/NavBar";
-import "../../Estilos/Piscina/misPiscinas.css";
 import SearchIcon from "@mui/icons-material/Search";
-import Carrusel from "../../Componentes/General/Carrusel";
-import ImageSlider from "../../Componentes/General/ImageSlider";
-import { NoEncryption } from "@mui/icons-material";
 import Backdrop from "../../Componentes/General/BackDrop";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import ImageSliderHorizontal from "../../Componentes/General/ImageSliderHorizontal";
+import SliderHorizontal from "../../Componentes/General/SliderHorizontal";
+import SliderVertical from "../../Componentes/General/SliderVertical";
+import { Girl } from "@mui/icons-material";
 
 function MisPiscinas() {
   // Estado ara guardar los datos del formulario
@@ -120,7 +118,7 @@ function MisPiscinas() {
     try {
       const tokenSend = localStorage.getItem("clave");
       const response = await fetch(
-        "https://pool-api-treea.vercel.app/v1/pool-by-user/656e4d4ffc0a8a2e68e1bc7e",
+        "https://treea-piscinas-api.vercel.app/v1/pool-by-user/656e4d4ffc0a8a2e68e1bc7e",
         {
           method: "GET",
           headers: {
@@ -186,13 +184,16 @@ function MisPiscinas() {
               sm={0}
               md={4}
               sx={{
-                // backgroundColor: "red",
                 height: "100%",
-                display: { xs: "none", sm: "none", md: "block" },
+                display: { xs: "none", sm: "none", md: "flex" },
               }}
             >
               {data && (
-                <ImageSlider data={data} obtenerId={obetnerId}></ImageSlider>
+                <SliderVertical
+                  data={data}
+                  obtenerId={obetnerId}
+                ></SliderVertical>
+                // <ImageSlider data={data} obtenerId={obetnerId}></ImageSlider>
               )}
             </Grid>
             <Grid item xs={12} sm={12} md={8}>
@@ -201,12 +202,20 @@ function MisPiscinas() {
                 sx={{
                   width: "100%",
                   // backgroundColor: "red",
-                  height: { xs: "25vh", sm: "10vh" },
+                  paddingTop: "10px",
+                  height: { xs: "300px", sm: "40vh" },
                   display: { xs: "flex", sm: "flex", md: "none" },
                 }}
               >
+                {/* <SliderHorizontal
+                  data={data}
+                  obtenerId={obetnerId}
+                ></SliderHorizontal> */}
                 {data && (
-                  <Carrusel data={data} obtenerId={obetnerId}></Carrusel>
+                  <SliderHorizontal
+                    data={data}
+                    obtenerId={obetnerId}
+                  ></SliderHorizontal>
                 )}
               </Grid>
               <Grid xs={12} sx={{ height: "15%" }}>
@@ -326,8 +335,12 @@ function MisPiscinas() {
                       <Grid item xs={12}>
                         <Box
                           sx={{
+                            // backgroundColor: "red",
                             width: "100%",
                             height: "200px",
+                            display: "flex",
+                            justifyContent: "center",
+                            marginBottom: "100px",
                           }}
                         >
                           <img src={pool.photo} className="img-piscina"></img>
@@ -380,18 +393,18 @@ function MisPiscinas() {
                         <Typography
                           sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                         >
-                          Temperatura
+                          Temperatura °C
                         </Typography>
-                        <Typography>{pool.temperature}</Typography>
+                        <Typography>{pool.temperature}°C</Typography>
                       </Grid>
 
                       <Grid item xs={4} sx={{ textAlign: "center" }}>
                         <Typography
                           sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                         >
-                          Temperatura externa
+                          Temperatura externa °C
                         </Typography>
-                        <Typography>{pool.externalTemperature}</Typography>
+                        <Typography>{pool.externalTemperature}°C</Typography>
                       </Grid>
 
                       <Grid item xs={4} sx={{ textAlign: "center" }}>
@@ -585,30 +598,82 @@ function MisPiscinas() {
                         </Typography>
                       </Grid>
 
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Filtro
-                        </Typography>
-                        <Typography>{pool.systemOperation}</Typography>
-                      </Grid>
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Altura del filtro
-                        </Typography>
-                        <Typography>{pool.caudal}</Typography>
-                      </Grid>
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Cantidad del filtro
-                        </Typography>
-                        <Typography>{pool.airConditioned}</Typography>
-                      </Grid>
+                      <Box
+                        sx={{
+                          ...styles.boxListadoFiltros,
+                        }}
+                      >
+                        {pool === "" ? (
+                          <Typography>No data</Typography>
+                        ) : (
+                          pool.filters.map((elemento, index) => (
+                            <Grid
+                              container
+                              xs={12}
+                              marginTop={1}
+                              marginBottom={1}
+                            >
+                              <Grid xs={12}>
+                                <Typography
+                                  sx={{
+                                    ...styles.fontTypografy,
+                                    width: "20%",
+                                    marginLeft: "40%",
+                                    borderBottom: "2px solid black",
+                                    marginBottom: "5px",
+                                  }}
+                                >
+                                  Filtro {index + 1}
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={4}>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  Filtro
+                                </Typography>
+                                <Typography sx={{ ...styles.fontTexto }}>
+                                  {elemento.filter}
+                                </Typography>
+                              </Grid>
+
+                              <Grid item xs={4}>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  Altua del filtro
+                                </Typography>
+                                <Typography sx={{ ...styles.fontTexto }}>
+                                  {elemento.filterBedHeight}
+                                </Typography>
+                              </Grid>
+
+                              <Grid item xs={4}>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  Capacidad del filtro
+                                </Typography>
+                                <Typography sx={{ ...styles.fontTexto }}>
+                                  {elemento.filterCapacity}
+                                </Typography>
+                              </Grid>
+
+                              <Grid item xs={4}>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  Diametro del filtro
+                                </Typography>
+                                <Typography sx={{ ...styles.fontTexto }}>
+                                  {elemento.filterDiameter}
+                                </Typography>
+                              </Grid>
+
+                              <Grid item xs={4}>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  Filter Height
+                                </Typography>
+                                <Typography sx={{ ...styles.fontTexto }}>
+                                  {elemento.filterHeight}
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          ))
+                        )}
+                      </Box>
 
                       <Grid item xs={12}>
                         <Typography
@@ -627,6 +692,43 @@ function MisPiscinas() {
                           Sección de bombas
                         </Typography>
                       </Grid>
+
+                      <Box
+                        sx={{
+                          ...styles.boxListadoFiltros,
+                        }}
+                      >
+                        {pool === "" ? (
+                          <Typography></Typography>
+                        ) : (
+                          pool.pumps.map((elemento) => (
+                            <Grid container xs={12}>
+                              <Grid sx={12}>
+                                <img
+                                  src={elemento.platePhoto}
+                                  style={{ width: "100px", height: "100px" }}
+                                ></img>
+                              </Grid>
+                              <Grid xs={4}>
+                                <Typography>PumBrand</Typography>
+                                <Typography>{elemento.pumpBrand}</Typography>
+                              </Grid>
+
+                              <Grid xs={4}>
+                                <Typography>PumFlow</Typography>
+                                <Typography>{elemento.pumpFlow}</Typography>
+                              </Grid>
+
+                              <Grid xs={4}>
+                                <Typography>referencePum</Typography>
+                                <Typography>
+                                  {elemento.referencePump}
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          ))
+                        )}
+                      </Box>
 
                       <Grid item xs={4} sx={{ textAlign: "center" }}>
                         <Typography
@@ -778,5 +880,25 @@ const styles = {
     overflowX: "hidden",
     height: "100vh",
     // backgroundColor: "red",
+  },
+
+  fontTypografy: {
+    fontFamily: "'Nunito Sans', sans-serif",
+    display: "flex",
+    justifyContent: "center",
+  },
+
+  fontTexto: {
+    display: "flex",
+    justifyContent: "center",
+  },
+
+  boxListadoFiltros: {
+    width: "100%",
+    marginTop: "10px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
   },
 };

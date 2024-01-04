@@ -11,7 +11,7 @@ import {
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ALERTA from "../../assets/alerta.png";
-import "../../Estilos/General/imageSlider.css";
+// import "../../Estilos/General/imageSlider.css";
 
 const Carousel = ({ data, obtenerId }) => {
   const [contador, setContador] = useState(0);

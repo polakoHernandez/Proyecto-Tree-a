@@ -40,6 +40,7 @@ function InputSelect({
           {label}
         </InputLabel>
         <Autocomplete
+          name={name}
           options={options}
           getOptionLabel={(option) => option.label}
           onChange={onChange}

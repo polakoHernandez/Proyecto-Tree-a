@@ -1,5 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box, Typography, Grid, Button, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Button,
+  CircularProgress,
+  IconButton,
+  Input,
+} from "@mui/material";
 import SearchAppBar from "../../Componentes/General/NavBar";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
@@ -8,6 +16,8 @@ import InputGeneral from "../../Componentes/General/InputGeneral";
 import InputSelect from "../../Componentes/General/InputSelect";
 import InputBuscar from "../../Componentes/General/InputBuscar";
 import Alertas from "../../Componentes/General/Alertas";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ClearIcon from "@mui/icons-material/Clear";
 
 function CrearPiscina() {
   //Referencia a inputs
@@ -16,54 +26,194 @@ function CrearPiscina() {
 
   const refGeneral = useRef("");
 
-  // Estado ara guardar los datos del formulario
+  // *Estado ara guardar los datos del formulario
   const [data, setData] = useState({
-    nombre: "",
+    nombre: "Nueva Pisicna",
     departamento: "",
     municipio: "",
-    direccion: "",
-    uso: "",
-    caracteristica: "",
-    temperatura: "",
-    temperaturaExterna: "",
-    estructura: "",
-    instalacion: "",
+    direccion: "Mi casa",
+    uso: "PRIVADA",
+    caracteristica: "CUBIERTA",
+    temperatura: 23,
+    temperaturaExterna: 24,
+    estructura: "Adultos",
+    instalacion: "Especial termales",
     fotoPiscina: "",
-    forma: "",
-    largo: "",
-    ancho: "",
-    profundidad: "",
-    profundidadB: "",
-    profundidadC: "",
-    operacion: "",
-    caudal: "",
-    climatizado: "",
-    recirculacionMinimo: "",
-    recirculacionMaximo: "",
-    dosificacion: "",
+    forma: "RECTANGULAR",
+    largo: 5,
+    ancho: 6,
+    profundidad: 1.2,
+    profundidadB: 1.6,
+    profundidadC: 1.5,
+    operacion: "Recirculacion",
+    caudal: 19,
+    climatizado: "Si",
+    recirculacionMinimo: 29,
+    recirculacionMaximo: 19,
+    dosificacion: "Si",
     filtro: "",
-    alturaFiltro: "",
-    cantidadFiltro: "",
-    caudalBomba: "",
-    cantidadBomba: "",
-    marcaBomba: "",
-    referenciaBomba: "",
-    cantidadCalentador: "",
-    referenciaCalentador: "",
-    marcaCalentador: "",
+    bomba: "",
+    calentador: "",
+    alturaFiltro: 19,
+    caudalBomba: 23,
+    marcaBomba: "Otra cosa",
+    referenciaBomba: "Nuveo",
+    referenciaCalentador: "jhkjhj",
+    marcaCalentador: "kh",
     fotoPiscina: "",
     fotoBomba: "",
     fichaTecnica: "",
     fichaTecnicaCalentador: "",
+    diametroFiltro: 23,
+    AlturaLechoFiltro: 90,
+    capacidadDelFiltro: 54,
   });
 
-  //Estado para guardar el id del departamento
+  //*Estados para agergar los texfield de filtros
+  const [texfiedlList, setTexfiedlList] = useState([
+    {
+      filter: "",
+      filterHeight: "",
+      filterDiameter: "",
+      filterCapacity: "",
+      filterBedHeight: "",
+    },
+  ]);
+
+  const addTexfiedl = () => {
+    setTexfiedlList((prevList) => [
+      ...prevList,
+      {
+        filter: "",
+        filterHeight: "",
+        filterDiameter: "",
+        filterCapacity: "",
+        filterBedHeight: "",
+      },
+    ]);
+  };
+
+  const handleInputChange = (index, name, value) => {
+    setTexfiedlList((prevList) => {
+      const newList = [...prevList];
+      newList[index][name] = value;
+      return newList;
+    });
+  };
+
+  const handleDelete = (index) => {
+    setTexfiedlList((prevList) => {
+      const newList = [...prevList];
+      newList.splice(index, 1); // Elimina el elemento en el índice especificado
+      return newList;
+    });
+  };
+
+  const handleSubmit = () => {
+    setData((prevData) => ({
+      ...prevData,
+      filtro: [
+        ...prevData.filtro,
+        ...texfiedlList.map((element) => ({ ...element })),
+      ],
+    }));
+  };
+
+  //*Estados para agregar los texfield de Bomba
+  const [textFiedsBomba, setTextFieldsBomba] = useState([
+    {
+      pumpFlow: "",
+      referencePump: "",
+      pumpBrand: "",
+      dataSheetPump: "",
+      platePhoto: "",
+    },
+  ]);
+
+  const addTexfieldBomba = () => {
+    setTextFieldsBomba((prevList) => [
+      ...prevList,
+      {
+        pumpFlow: "",
+        referencePump: "",
+        filterHeight: "",
+        pumpBrand: "",
+        platePhoto: "",
+      },
+    ]);
+  };
+
+  const handleInputChangeBomba = (index, name, value) => {
+    setTextFieldsBomba((prevList) => {
+      const newList = [...prevList];
+      newList[index][name] = value;
+      return newList;
+    });
+  };
+
+  const handleDeleteBomba = (index) => {
+    setTextFieldsBomba((prevList) => {
+      const newList = [...prevList];
+      newList.splice(index, 1); // Elimina el elemento en el índice especificado
+      return newList;
+    });
+  };
+
+  const handleSubmitBomba = () => {
+    setData((prevData) => ({
+      ...prevData,
+      bomba: [
+        ...prevData.bomba,
+        ...textFiedsBomba.map((element) => ({ ...element })),
+      ],
+    }));
+    console.log(data.bomba);
+  };
+
+  //*Estados para agregar texfiled para calentadores
+
+  const [textfiledCalentador, setTextFieldsClentaodr] = useState([
+    {
+      heaterReference: "",
+      heaterBrand: "",
+      dataSheetHeater: "",
+    },
+  ]);
+
+  const addTexfieldCalentaodr = () => {
+    setTextFieldsClentaodr((prevList) => [
+      ...prevList,
+      {
+        heaterReference: "",
+        heaterBrand: "",
+        dataSheetHeater: "",
+      },
+    ]);
+  };
+
+  const handleInputChangeCalentaodr = (index, name, value) => {
+    setTextFieldsClentaodr((prevList) => {
+      const newList = [...prevList];
+      newList[index][name] = value;
+      return newList;
+    });
+  };
+
+  const handleDeleteCalentador = (index) => {
+    setTextFieldsClentaodr((prevList) => {
+      const newList = [...prevList];
+      newList.splice(index, 1); // Elimina el elemento en el índice especificado
+      return newList;
+    });
+  };
+
+  //*Estado para guardar el id del departamento
   const [idDepartamento, setIdDepartamento] = useState("");
 
   //Estado para deshabilidar el boton guardar
   const [deshabilitar, setDeshabilitar] = useState(false);
 
-  // Funcion para obetener los datos de los inputs
+  // *Funcion para obetener los datos de los inputs
   const seleccionarData = (name, value) => {
     setData((prevData) => ({
       ...prevData,
@@ -72,7 +222,7 @@ function CrearPiscina() {
     console.log(data);
   };
 
-  //Funcion para limpiar a data
+  //*Funcion para limpiar a data
 
   const imprimir = () => {
     // console.log(refGeneral.current.querySelector("input").value);
@@ -423,14 +573,37 @@ function CrearPiscina() {
   };
 
   const crearPiscina = async () => {
-    for (const key in data) {
-      if (data.hasOwnProperty(key) && data[key] === "") {
-        setOpen(true);
-        setColor("error");
-        setMensaje("Todos los campos son obligatorios!");
-        return; // At least one attribute is empty
-      }
-    }
+    // for (const key in data) {
+    //   if (data.hasOwnProperty(key) && data[key] === "") {
+    //     setOpen(true);
+    //     setColor("error");
+    //     setMensaje("Todos los campos son obligatorios!");
+    //     return; // At least one attribute is empty
+    //   }
+    // }
+
+    setData((prevData) => ({
+      ...prevData,
+      filtro: [
+        ...prevData.filtro,
+        ...texfiedlList.map((element) => ({ ...element })),
+      ],
+
+      bomba: [
+        ...prevData.bomba,
+        ...textFiedsBomba.map((element) => ({ ...element })),
+      ],
+
+      calentador: [
+        ...prevData.calentador,
+        ...textfiledCalentador.map((element) => ({ ...element })),
+      ],
+    }));
+
+    console.log(data);
+
+    return;
+    // alert(data.filtro);
 
     setDeshabilitar(true);
 
@@ -440,6 +613,7 @@ function CrearPiscina() {
     formData.append("address", data.direccion);
     formData.append("height", data.largo);
     formData.append("width", data.ancho);
+    formData.append("department", data.departamento);
     formData.append("city", data.municipio);
     formData.append("externalTemperature", data.temperaturaExterna);
     formData.append("category", data.estructura);
@@ -459,31 +633,64 @@ function CrearPiscina() {
     formData.append("photo", data.fotoPiscina);
     formData.append("typePool", data.caracteristica);
     formData.append("temperature", data.temperatura);
-    formData.append("nPumps", data.cantidadBomba);
     formData.append("minDepth", 1996);
     formData.append("maxDepth", 1996);
     formData.append("typeInstallation", data.instalacion);
-    formData.append("systemOperation", data.operacion);
+    formData.append("systemOperation", data.operacion); // todo usar ChangeOperator data?.property
     formData.append("airConditioned", data.climatizado);
     formData.append("caudal", data.caudal);
     formData.append("autoDosing", data.dosificacion);
-    formData.append("filter", data.filtro);
-    formData.append("filterHeight", data.alturaFiltro);
-    formData.append("filterQuantity", data.cantidadFiltro);
-    formData.append("pumpFlow", data.caudalBomba);
-    formData.append("referencePump", data.referenciaBomba);
-    formData.append("pumpBrand", data.marcaBomba);
-    formData.append("dataSheetPump", data.fichaTecnica);
-    formData.append("platePhoto", data.fotoBomba);
-    formData.append("heaterQuantity", data.cantidadCalentador);
-    formData.append("heaterReference", data.referenciaCalentador);
-    formData.append("heaterBrand", data.marcaCalentador);
-    formData.append("dataSheetHeater", data.fichaTecnicaCalentador);
-    formData.append("department", data.departamento);
+
+    data.filtro.forEach((elemento, index) => {
+      formData.append(`filters[${index}][filter]`, elemento.filter);
+      formData.append(`filters[${index}][filterHeight]`, elemento.filterHeight);
+      formData.append(
+        `filters[${index}][filterDiameter]`,
+        elemento.filterDiameter
+      );
+      formData.append(
+        `filters[${index}][filterCapacity]`,
+        elemento.filterCapacity
+      );
+      formData.append(
+        `filters[${index}][filterBedHeight]`,
+        elemento.filterBedHeight
+      );
+    });
+
+    data.bomba.forEach((elemento, index) => {
+      formData.append(`pumps[${index}][pumpFlow]`, elemento.pumpFlow);
+      formData.append(`pumps[${index}][referencePump]`, elemento.referencePump);
+      formData.append(`pumps[${index}][pumpBrand]`, elemento.pumpBrand);
+      formData.append(`pumps[${index}][dataSheetPump]`, elemento.dataSheetPump);
+      formData.append(`pumps[${index}][platePhoto]`, elemento.platePhoto);
+    });
+
+    data.calentador.forEach((elemento, index) => {
+      formData.append(
+        `heaters[${index}][heaterReference]`,
+        elemento.heaterReference
+      );
+      formData.append(`heaters[${index}][heaterBrand]`, elemento.heaterBrand);
+      formData.append(
+        `heaters[${index}][dataSheetHeater]`,
+        elemento.dataSheetHeater
+      );
+    });
+
+    // formData.append(
+    //   "filters",
+    //   data.filtro.forEach((element) => {
+    //     element;
+    //   })
+    // ); // todo data.filters.filter
+    // formData.append("filters[filterHeight]", data.filtro.filterHeight); // todo data.filters.filter
+    // formData.append("filters[filterDiameter]", data.filtro.filterDiameter); // todo data.filters.filter
+    // formData.append("filters[filterCapacity]", data.filtro.filterCapacity); // todo data.filters.filter
 
     try {
       const response = await fetch(
-        "https://pool-api-treea.vercel.app/v1/pool",
+        "https://treea-piscinas-api.vercel.app/v1/pool",
         {
           method: "POST",
           headers: {
@@ -972,41 +1179,116 @@ function CrearPiscina() {
                   Sección de filtros
                 </Typography>
                 <Grid container>
-                  <Grid item xs={12} sm={12} md={4}>
-                    <InputSelect
-                      options={filtros}
-                      label="Filtros"
-                      placeholder="Seleccione"
-                      icon={<PoolIcon></PoolIcon>}
-                      onChange={(e) =>
-                        seleccionarData("filtro", e.target.textContent)
-                      }
-                    ></InputSelect>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={4}>
-                    <InputGeneral
-                      value={data.alturaFiltro}
-                      type="number"
-                      label="Altura del filtro"
-                      placeholder="Seleccione la altura del filtro"
-                      icon={<PoolIcon></PoolIcon>}
-                      onChange={(e) =>
-                        seleccionarData("alturaFiltro", e.target.value)
-                      }
-                    ></InputGeneral>
-                  </Grid>
-
-                  <Grid item xs={12} sm={12} md={4}>
-                    <InputGeneral
-                      value={data.cantidadFiltro}
-                      type="number"
-                      label="Cantidad del filtro"
-                      placeholder="Ingrese la cantidad del filtro"
-                      icon={<PoolIcon></PoolIcon>}
-                      onChange={(e) =>
-                        seleccionarData("cantidadFiltro", e.target.value)
-                      }
-                    ></InputGeneral>
+                  <Grid container xs={12}>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "end",
+                        // backgroundColor: "beige",
+                      }}
+                    >
+                      <IconButton
+                        className="button"
+                        onClick={addTexfiedl}
+                        sx={{
+                          color: "green",
+                          border: "1px solid green",
+                          borderRadius: "0px",
+                          marginRight: "2%",
+                        }}
+                      >
+                        <AddCircleIcon></AddCircleIcon>
+                      </IconButton>
+                    </Grid>
+                    {texfiedlList.map((element, index) => (
+                      <Grid container key={index}>
+                        <Grid xs={12}>
+                          <IconButton
+                            className="button-delete"
+                            onClick={() => handleDelete(index)}
+                            sx={{
+                              color: "red",
+                              border: "1px solid red",
+                              borderRadius: "0px",
+                              marginTop: "15px",
+                            }}
+                          >
+                            <ClearIcon></ClearIcon>
+                          </IconButton>
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputGeneral
+                            icon={<PoolIcon></PoolIcon>}
+                            label="Filtro"
+                            onChange={(e) =>
+                              handleInputChange(index, "filter", e.target.value)
+                            }
+                            value={element.InputUno}
+                          />
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputGeneral
+                            icon={<PoolIcon></PoolIcon>}
+                            label="Altura dle filtro"
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "filterHeight",
+                                e.target.value
+                              )
+                            }
+                            value={element.InputDos}
+                          />
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputGeneral
+                            icon={<PoolIcon></PoolIcon>}
+                            label="Diametro del filtro"
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "filterDiameter",
+                                e.target.value
+                              )
+                            }
+                            value={element.InputTres}
+                          />
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputGeneral
+                            icon={<PoolIcon></PoolIcon>}
+                            label="Capacidad del filtro"
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "filterCapacity",
+                                e.target.value
+                              )
+                            }
+                            value={element.InputCuatro}
+                          />
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputGeneral
+                            icon={<PoolIcon></PoolIcon>}
+                            label="Altura de la cama del filtro"
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "filterBedHeight",
+                                e.target.value
+                              )
+                            }
+                            value={element.InputCinco}
+                          />
+                        </Grid>
+                      </Grid>
+                    ))}
+                    <button className="button" onClick={handleSubmit}>
+                      Mostrar
+                    </button>
                   </Grid>
                 </Grid>
 
@@ -1015,7 +1297,125 @@ function CrearPiscina() {
                   Sección de bombas
                 </Typography>
                 <Grid container>
-                  <Grid item xs={12} sm={12} md={4}>
+                  <Grid container xs={12}>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "end",
+                        // backgroundColor: "beige",
+                      }}
+                    >
+                      <IconButton
+                        className="button"
+                        onClick={addTexfieldBomba}
+                        sx={{
+                          color: "green",
+                          border: "1px solid green",
+                          borderRadius: "0px",
+                          marginRight: "2%",
+                        }}
+                      >
+                        <AddCircleIcon></AddCircleIcon>
+                      </IconButton>
+                    </Grid>
+                    {textFiedsBomba.map((element, index) => (
+                      <Grid container key={index}>
+                        <Grid xs={12}>
+                          <IconButton
+                            className="button-delete"
+                            onClick={() => handleDeleteBomba(index)}
+                            sx={{
+                              color: "red",
+                              border: "1px solid red",
+                              borderRadius: "0px",
+                              marginTop: "15px",
+                            }}
+                          >
+                            <ClearIcon></ClearIcon>
+                          </IconButton>
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputGeneral
+                            icon={<PoolIcon></PoolIcon>}
+                            label="pumpFlow"
+                            onChange={(e) =>
+                              handleInputChangeBomba(
+                                index,
+                                "pumpFlow",
+                                e.target.value
+                              )
+                            }
+                            value={element.InputUno}
+                          />
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputGeneral
+                            icon={<PoolIcon></PoolIcon>}
+                            label="referencePump"
+                            onChange={(e) =>
+                              handleInputChangeBomba(
+                                index,
+                                "referencePump",
+                                e.target.value
+                              )
+                            }
+                            value={element.InputDos}
+                          />
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputGeneral
+                            icon={<PoolIcon></PoolIcon>}
+                            label="pumpBrand"
+                            onChange={(e) =>
+                              handleInputChangeBomba(
+                                index,
+                                "pumpBrand",
+                                e.target.value
+                              )
+                            }
+                            value={element.InputTres}
+                          />
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputBuscar
+                            icon={<PoolIcon></PoolIcon>}
+                            label="dataSheetPump"
+                            onChange={(e) =>
+                              handleInputChangeBomba(
+                                index,
+                                "dataSheetPump",
+                                e.target.files[0]
+                              )
+                            }
+                            value={element.InputCuatro}
+                          />
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputBuscar
+                            type="file"
+                            icon={<PoolIcon></PoolIcon>}
+                            label="platePhoto"
+                            onChange={(e) =>
+                              handleInputChangeBomba(
+                                index,
+                                "platePhoto",
+                                e.target.files[0]
+                              )
+                            }
+                            value={element.InputCinco}
+                          />
+                        </Grid>
+                      </Grid>
+                    ))}
+                    <button className="button" onClick={handleSubmitBomba}>
+                      Mostrar
+                    </button>
+                  </Grid>
+
+                  {/* polako */}
+                  {/* <Grid item xs={12} sm={12} md={4}>
                     <InputGeneral
                       value={data.caudalBomba}
                       type="number"
@@ -1024,18 +1424,6 @@ function CrearPiscina() {
                       icon={<PoolIcon></PoolIcon>}
                       onChange={(e) =>
                         seleccionarData("caudalBomba", e.target.value)
-                      }
-                    ></InputGeneral>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={4}>
-                    <InputGeneral
-                      value={data.cantidadBomba}
-                      type="number"
-                      label="Cantidad de bomdas"
-                      placeholder="Ingrese la cantidad de bombas"
-                      icon={<PoolIcon></PoolIcon>}
-                      onChange={(e) =>
-                        seleccionarData("cantidadBomba", e.target.value)
                       }
                     ></InputGeneral>
                   </Grid>
@@ -1106,7 +1494,7 @@ function CrearPiscina() {
                         seleccionarData("fichaTecnica", e.target.files[0])
                       }
                     ></InputBuscar>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
 
                 {/* Seccion Calentador */}
@@ -1114,90 +1502,111 @@ function CrearPiscina() {
                   Sección de calentador
                 </Typography>
                 <Grid container>
-                  <Grid item xs={12} sm={12} md={4}>
-                    <InputGeneral
-                      value={data.cantidadCalentador}
-                      type="number"
-                      label="Cantidad de calentador"
-                      placeholder="Ingrese la cantidad del calentaodr"
-                      icon={<PoolIcon></PoolIcon>}
-                      onChange={(e) =>
-                        seleccionarData("cantidadCalentador", e.target.value)
-                      }
-                    ></InputGeneral>
+                  <Grid container xs={12}>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "end",
+                        // backgroundColor: "beige",
+                      }}
+                    >
+                      <IconButton
+                        className="button"
+                        onClick={addTexfieldCalentaodr}
+                        sx={{
+                          color: "green",
+                          border: "1px solid green",
+                          borderRadius: "0px",
+                          marginRight: "2%",
+                        }}
+                      >
+                        <AddCircleIcon></AddCircleIcon>
+                      </IconButton>
+                    </Grid>
+                    {textfiledCalentador.map((element, index) => (
+                      <Grid container key={index}>
+                        <Grid xs={12}>
+                          <IconButton
+                            className="button-delete"
+                            onClick={() => handleDeleteCalentador(index)}
+                            sx={{
+                              color: "red",
+                              border: "1px solid red",
+                              borderRadius: "0px",
+                              marginTop: "15px",
+                            }}
+                          >
+                            <ClearIcon></ClearIcon>
+                          </IconButton>
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputGeneral
+                            icon={<PoolIcon></PoolIcon>}
+                            label="heaterReference"
+                            onChange={(e) =>
+                              handleInputChangeCalentaodr(
+                                index,
+                                "heaterReference",
+                                e.target.value
+                              )
+                            }
+                            value={element.InputUno}
+                          />
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputGeneral
+                            icon={<PoolIcon></PoolIcon>}
+                            label="heaterBrand"
+                            onChange={(e) =>
+                              handleInputChangeCalentaodr(
+                                index,
+                                "heaterBrand",
+                                e.target.value
+                              )
+                            }
+                            value={element.InputDos}
+                          />
+                        </Grid>
+                        <Grid xs={4} sm={12} md={4}>
+                          <InputBuscar
+                            icon={<PoolIcon></PoolIcon>}
+                            label="dataSheetHeater"
+                            onChange={(e) =>
+                              handleInputChangeCalentaodr(
+                                index,
+                                "dataSheetHeater",
+                                e.target.files[0]
+                              )
+                            }
+                            value={element.InputTres}
+                          />
+                        </Grid>
+                      </Grid>
+                    ))}
+                    <button className="button" onClick={handleSubmitBomba}>
+                      Mostrar
+                    </button>
                   </Grid>
-                  <Grid item xs={12} sm={12} md={4}>
-                    <InputGeneral
-                      value={data.referenciaCalentador}
-                      label="Referencia del calentador"
-                      placeholder="Referencia del calentador"
-                      onChange={(e) =>
-                        seleccionarData("referenciaCalentador", e.target.value)
-                      }
-                      icon={<PoolIcon></PoolIcon>}
-                    ></InputGeneral>
-                  </Grid>
-
-                  <Grid item xs={12} sm={12} md={4}>
-                    <InputGeneral
-                      label="Marca del calentador"
-                      placeholder="Ingrese la marca del calentador"
-                      icon={<PoolIcon></PoolIcon>}
-                      onChange={(e) =>
-                        seleccionarData("marcaCalentador", e.target.value)
-                      }
-                      value={data.marcaCalentador}
-                    ></InputGeneral>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={4}
+                </Grid>
+                <Grid xs={12}>
+                  <Button
+                    onClick={() => crearPiscina()}
                     sx={{
-                      height: "90px",
-                      // backgroundColor: "red",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      paddingLeft: "15px",
-                      overflow: "scroll",
+                      backgroundColor: "rgb(0,164,228)",
+                      color: "white",
+                      width: "95%",
+                      marginTop: "10px",
+                      marginBottom: "10px",
+                      marginLeft: "2.5%",
+                      ":hover": {
+                        backgroundColor: "rgb(0,164,228)",
+                      },
                     }}
                   >
-                    <InputBuscar
-                      label="Ficha ténica calentador"
-                      onChange={(e) =>
-                        seleccionarData(
-                          "fichaTecnicaCalentador",
-                          e.target.files[0]
-                        )
-                      }
-                    ></InputBuscar>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      disabled={deshabilitar}
-                      variant="contained"
-                      sx={{
-                        backgroundColor: "rgb(0,164,228)",
-                        width: "95%",
-                        marginLeft: "2.5%",
-                        "&:hover": {
-                          backgroundColor: "rgb(0,164,228)",
-                        },
-                      }}
-                      onClick={() => crearPiscina()}
-                    >
-                      {deshabilitar ? (
-                        <CircularProgress
-                          size={24}
-                          color="inherit"
-                        ></CircularProgress>
-                      ) : (
-                        "GUARDAR"
-                      )}
-                    </Button>
-                  </Grid>
+                    Guardar
+                  </Button>
                 </Grid>
               </Box>
 

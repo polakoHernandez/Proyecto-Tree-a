@@ -3,27 +3,41 @@ import { DataGrid } from "@mui/x-data-grid";
 import "../../Estilos/General/tabla.css";
 
 const columns = [
-  { field: "_id", headerName: "_id", width: 300, headerAlign: "center" },
-  {
-    field: "createAt",
-    headerName: "creaeAt",
-    width: 300,
-    headerAlign: "center",
+  // { field: "_id", headerName: "_id", width: 300, headerAlign: "center" },
+  // {
+  //   field: "createAt",
+  //   headerName: "creaeAt",
+  //   width: 300,
+  //   headerAlign: "center",
 
-    valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
-  },
+  //   valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
+  // },
   {
     field: "endDate",
-    headerName: "endDate",
+    headerName: "Fecha final",
     width: 300,
     headerAlign: "center",
 
     valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
   },
+
+  //Esto viene como un objeto con el nombre u
   { field: "poolId", headerName: "poolId", width: 300, headerAlign: "center" },
   {
+    field: "timeUse",
+    headerName: "Tiempo de uso",
+    width: 300,
+    headerAlign: "center",
+  },
+  {
+    field: "quantityPerson",
+    headerName: "Cantidad de persona",
+    width: 300,
+    headerAlign: "center",
+  },
+  {
     field: "startDate",
-    headerName: "startDate",
+    headerName: "Fecha de inicio",
     width: 300,
     headerAlign: "center",
 
@@ -31,7 +45,7 @@ const columns = [
   },
 ];
 
-export default function Tabla({ data, contador }) {
+export default function Tabla({ data, contador, nombrePiscina }) {
   console.log(data || "");
   return (
     <div

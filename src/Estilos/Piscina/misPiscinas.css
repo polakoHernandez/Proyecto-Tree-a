@@ -14,9 +14,8 @@
 }
 
 .img-piscina {
-  width: 90%;
-  margin-left: 5%;
-  height: 100%;
-  padding-top: 10px;
+  width: 300px;
+  height: 300px;
+  /* padding-top: 10px; */
   border-radius: 5px;
 }

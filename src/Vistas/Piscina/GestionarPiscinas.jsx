@@ -151,7 +151,8 @@ function GestionarPiscinas() {
   //Funcion pra listar el aforo
   const listarAforo = async (idPool) => {
     const response = await fetch(
-      `https://pool-api-treea.vercel.app/v1/aforo/${idPool}`,
+      // `https://pool-api-treea.vercel.app/v1/aforo/${idPool}`,
+      `https://treea-piscinas-api.vercel.app/v1/aforo/${idPool}`,
       {
         method: "GET",
         headers: {
@@ -241,7 +242,6 @@ function GestionarPiscinas() {
 
   const animationStyles = {
     mainBox: {
-      // backgroundColor: "pink",
       height: "87%",
       transition: "ease 0.3s",
       transform:
@@ -703,7 +703,7 @@ function GestionarPiscinas() {
                             <Typography
                               sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                             >
-                              Largo
+                              Largo (m)
                             </Typography>
                             <Typography>{pool.height}</Typography>
                           </Grid>
@@ -711,7 +711,7 @@ function GestionarPiscinas() {
                             <Typography
                               sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                             >
-                              Ancho
+                              Ancho (m)
                             </Typography>
                             <Typography>{pool.width}</Typography>
                           </Grid>
@@ -720,7 +720,7 @@ function GestionarPiscinas() {
                             <Typography
                               sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                             >
-                              Proundidad
+                              Proundidad (m)
                             </Typography>
                             <Typography>{pool.maxDepth}</Typography>
                           </Grid>
@@ -729,7 +729,7 @@ function GestionarPiscinas() {
                             <Typography
                               sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                             >
-                              Profundidad B
+                              Profundidad B (m)
                             </Typography>
                             <Typography>{pool.meanDepth}</Typography>
                           </Grid>
@@ -738,7 +738,7 @@ function GestionarPiscinas() {
                             <Typography
                               sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                             >
-                              Profundidad C
+                              Profundidad C (m)
                             </Typography>
                             <Typography>{pool.minDepth}</Typography>
                           </Grid>
@@ -1181,7 +1181,11 @@ function GestionarPiscinas() {
                     {respuestaAforo === "" ? (
                       ""
                     ) : (
-                      <Tabla data={respuestaAforo} contador={contador}></Tabla>
+                      <Tabla
+                        data={respuestaAforo}
+                        contador={contador}
+                        nombrePiscina={pool.name}
+                      ></Tabla>
                     )}
                   </Box>
                   <Box

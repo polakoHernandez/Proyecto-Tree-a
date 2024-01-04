@@ -8,9 +8,9 @@ import MyComponent from "./Componentes/General/Paginatio";
 import CrearPiscina from "./Vistas/Piscina/CrearPiscina";
 import EditarUsuario from "./Vistas/Usuarios/EditarUsuario";
 import MisPiscinas from "./Vistas/Piscina/MisPiscinas";
-import Carrusel from "./Componentes/General/Carrusel";
-import ImageSlider from "./Componentes/General/ImageSlider";
 import GestionarPiscinas from "./Vistas/Piscina/GestionarPiscinas";
+import CrearQuimico from "./Vistas/Quimicos/CrearQumico";
+import AgregarInventario from "./Vistas/Quimicos/AgregarInventario";
 function App() {
   return (
     <>
@@ -43,8 +43,15 @@ function App() {
             element={<GestionarPiscinas></GestionarPiscinas>}
           ></Route>
 
-          <Route path="/carrousel" element={<Carrusel></Carrusel>}></Route>
-          <Route path="/imageSlider" element={<Carrusel></Carrusel>}></Route>
+          <Route
+            path="/crearQuimico"
+            element={<CrearQuimico></CrearQuimico>}
+          ></Route>
+
+          <Route
+            path="/agregarInventario"
+            element={<AgregarInventario></AgregarInventario>}
+          ></Route>
         </Routes>
       </BrowserRouter>
     </>

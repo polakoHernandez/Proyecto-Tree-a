@@ -30,7 +30,7 @@ const Carrusel = ({ data, obtenerId }) => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 1,
+    slidesToShow: 3,
     slidesToScroll: 1,
     centerPadding: 0,
   };
@@ -45,7 +45,7 @@ const Carrusel = ({ data, obtenerId }) => {
             key={pool._id}
             sx={{
               height: { xs: "180px", sm: "180px" },
-              width: { height: { xs: "90%", sm: "30%" } },
+              width: { height: { xs: "50px", sm: "50px" } },
             }}
           >
             <CardActionArea sx={{ width: "100%", height: "100%" }}>

@@ -427,6 +427,7 @@ export default function SearchAppBar({
               }}
             >
               <ListItemButton
+                onClick={() => navigate("/crearParametro")}
                 sx={{
                   pl: 4,
                   borderBottom: "1px solid white",
@@ -547,6 +548,7 @@ export default function SearchAppBar({
               }}
             >
               <ListItemButton
+                onClick={() => navigate("/crearQuimico")}
                 sx={{
                   pl: 4,
                   borderBottom: "1px solid white",
@@ -575,6 +577,7 @@ export default function SearchAppBar({
                 <ChevronRightIcon></ChevronRightIcon>
               </ListItemButton>
               <ListItemButton
+                onClick={() => navigate("/agregarInventario")}
                 sx={{
                   pl: 4,
                   borderBottom: "1px solid white",

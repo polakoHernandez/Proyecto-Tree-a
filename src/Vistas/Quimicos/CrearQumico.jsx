@@ -24,7 +24,7 @@ const CrearQuimico = () => {
     proveedor: "",
     unidades: "",
     cantidadMinima: "",
-    Ingreso: "",
+    ingreso: "",
     lote: "",
     fecha: "",
   });
@@ -138,13 +138,13 @@ const CrearQuimico = () => {
 
   const listaNombres = [
     {
-      label: "Hiploclarito de calcio 67%",
+      label: "Hiploclorito de calcio 67%",
     },
     {
-      label: "Hiploclarito de sodio 12%",
+      label: "Hiploclorito de sodio 12%",
     },
     {
-      label: "Tricloro",
+      label: "Tricloro 90%",
     },
     {
       label: "Dicloro anhidro 62%",
@@ -222,7 +222,7 @@ const CrearQuimico = () => {
     formData.append("supplier", data.proveedor);
     formData.append("units", data.unidades);
     formData.append("minQuantity", data.cantidadMinima);
-    // formData.append("availableQuantity", data.Ingreso);
+    formData.append("availableQuantity", data.ingreso);
     formData.append("lot", data.lote);
     formData.append("expirationDate", data.fecha);
 
@@ -232,6 +232,7 @@ const CrearQuimico = () => {
   const crearrQuimico = async () => {
     setHabilitar(true);
     const body = crearFormulario();
+    console.log(body.get("units"));
 
     const response = await fetch(
       "https://treea-piscinas-api.vercel.app/v1/chemical-product",

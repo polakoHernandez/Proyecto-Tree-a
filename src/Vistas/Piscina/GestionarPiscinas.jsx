@@ -5,15 +5,12 @@ import {
   Typography,
   IconButton,
   Button,
-  TextField,
   CircularProgress,
   Tooltip,
 } from "@mui/material";
 import SearchAppBar from "../../Componentes/General/NavBar";
 import "../../Estilos/Piscina/misPiscinas.css";
 import SearchIcon from "@mui/icons-material/Search";
-import Carrusel from "../../Componentes/General/Carrusel";
-import ImageSlider from "../../Componentes/General/ImageSlider";
 import Backdrop from "../../Componentes/General/BackDrop";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import InputGeneal from "../../Componentes/General/InputGeneral";
@@ -23,6 +20,8 @@ import Tabla from "../../Componentes/GestionarPisicnas/Tabla";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import EditIcon from "@mui/icons-material/Edit";
+import SliderVertical from "../../Componentes/GestionarPisicnas/SliderVertical";
+import SliderHorizontal from "../../Componentes/GestionarPisicnas/SliderHorizontal";
 
 function GestionarPiscinas() {
   const [data, setData] = useState("");
@@ -150,6 +149,8 @@ function GestionarPiscinas() {
 
   //Funcion pra listar el aforo
   const listarAforo = async (idPool) => {
+    console.log(idPool);
+
     const response = await fetch(
       // `https://pool-api-treea.vercel.app/v1/aforo/${idPool}`,
       `https://treea-piscinas-api.vercel.app/v1/aforo/${idPool}`,
@@ -161,13 +162,12 @@ function GestionarPiscinas() {
         },
       }
     );
-
     switch (response.status) {
       case 200:
         const respuesta = await response.json();
         // console.log(respuesta.aforoId);
         setRespuestaAforo(respuesta.aforoId);
-        console.log("Estado actualizado:", respuestaAforo); // Añadir este console.log
+        console.log(respuestaAforo); // Añadir este console.log
         break;
 
       case 404:
@@ -256,7 +256,7 @@ function GestionarPiscinas() {
     try {
       const tokenSend = localStorage.getItem("clave");
       const response = await fetch(
-        "https://pool-api-treea.vercel.app/v1/pool-by-user/656e4d4ffc0a8a2e68e1bc7e",
+        "https://pool-api-treea.vercel.app/v1/pools/",
         {
           method: "GET",
           headers: {
@@ -290,9 +290,7 @@ function GestionarPiscinas() {
   };
 
   const obetnerId = (idPool) => {
-    const respuesta = data.poolCreatedByUser.find(
-      (element) => element._id === idPool
-    );
+    const respuesta = data.pools.find((element) => element._id === idPool);
     setPool(respuesta);
   };
 
@@ -336,7 +334,10 @@ function GestionarPiscinas() {
               }}
             >
               {data && (
-                <ImageSlider data={data} obtenerId={obetnerId}></ImageSlider>
+                <SliderVertical
+                  data={data}
+                  obtenerId={obetnerId}
+                ></SliderVertical>
               )}
             </Grid>
             <Grid item xs={12} sm={12} md={8}>
@@ -344,13 +345,15 @@ function GestionarPiscinas() {
                 xs={12}
                 sx={{
                   width: "100%",
-                  // backgroundColor: "red",
-                  height: { xs: "25vh", sm: "10vh" },
+                  height: { xs: "50vh", sm: "30vh" },
                   display: { xs: "flex", sm: "flex", md: "none" },
                 }}
               >
                 {data && (
-                  <Carrusel data={data} obtenerId={obetnerId}></Carrusel>
+                  <SliderHorizontal
+                    data={data}
+                    obtenerId={obetnerId}
+                  ></SliderHorizontal>
                 )}
               </Grid>
               <Grid xs={12} sx={{ height: "15%" }}>
@@ -366,7 +369,7 @@ function GestionarPiscinas() {
                 >
                   <Box
                     sx={{
-                      marginTop: { xs: "20px", sm: "0px" },
+                      marginTop: { xs: "50px", sm: "0px" },
                       marginRight: { xs: "2%", sm: "3%", md: "7%" },
                     }}
                   >
@@ -580,7 +583,11 @@ function GestionarPiscinas() {
                             <Box
                               sx={{
                                 width: "100%",
-                                height: "200px",
+                                height: "400px",
+                                // backgroundColor: "red",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
                               }}
                             >
                               <img

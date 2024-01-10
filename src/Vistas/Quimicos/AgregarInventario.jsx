@@ -1,5 +1,12 @@
-import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
-import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import SearchAppBar from "../../Componentes/General/NavBar";
 import styles from "./Estllos/agegarInventarioUI";
 import {
@@ -9,6 +16,7 @@ import {
 } from "@mui/icons-material";
 import InputSelect from "../../Componentes/General/InputSelect";
 import InputGeneral from "../../Componentes/General/InputGeneral";
+import TablaInventarioId from "../../Componentes/Quimicos/TablaInventarioId";
 
 function AgregarInventario() {
   const [mover, setMover] = useState(false); //MOvercon Piscina
@@ -16,6 +24,46 @@ function AgregarInventario() {
   const [moverParametros, setMoverParametros] = useState(false);
   const [moverQuimicos, setMoverQuimicos] = useState(false);
   const [moverPerfil, setMoverPerfil] = useState(false);
+  const [habilitar, setHabilitar] = useState(false);
+
+  //*Estados para guradar los uimicos de la repuesta del servidor
+  const [data, setData] = useState([]);
+  const [nombresQuimicos, setNombresQuimicos] = useState([]);
+  const [quimico, setQuimico] = useState({
+    name: "no data",
+    availableQuantity: 0,
+  });
+
+  //*estado para guardar data del reotrno por Id
+  const [inventarioId, setinvenarioId] = useState([]);
+
+  //*Estados para guardar los datos de los texfield
+  const [dataText, setDataText] = useState({
+    cantidad: "",
+    unidades: "",
+    lote: "",
+    fecha: "",
+  });
+
+  //*Funcion para capturar los datos de los texFields
+  const catchDataText = (e) => {
+    setDataText((prevData) => ({
+      ...prevData,
+      [e.target.name]: e.target.value,
+    }));
+
+    console.log(dataText);
+  };
+
+  //*Funcion para capturar los files d elos inputBuscar
+  const catchSelect = (nombre, value) => {
+    setDataText((prevData) => ({
+      ...prevData,
+      [nombre]: value,
+    }));
+
+    console.log(data);
+  };
 
   //*Estado para el display de las vistas
   const [contador, setContador] = useState(1);
@@ -132,7 +180,7 @@ function AgregarInventario() {
     },
 
     dos: {
-      backgroundColor: "blue",
+      // backgroundColor: "blue",
       height: "100%",
       display: contador === 2 ? "flex" : "none",
     },
@@ -143,6 +191,155 @@ function AgregarInventario() {
       display: contador === 3 ? "flex" : "none",
     },
   };
+  const listaUnidades = [
+    {
+      label: "Kilogramos",
+    },
+    {
+      label: "Gramos",
+    },
+
+    {
+      label: "Litros",
+    },
+    {
+      label: "Galones",
+    },
+  ];
+
+  //*Funcion para traer los productos quimicos de la base de datos
+  const listarProductosQuimicos = async () => {
+    const response = await fetch(
+      "https://treea-piscinas-api.vercel.app/v1/chemical-products",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "x-token": localStorage.getItem("clave"),
+        },
+      }
+    );
+
+    switch (response.status) {
+      case 200:
+        const respuesta = await response.json();
+        setData(respuesta);
+        setNombresQuimicos([]);
+        console.log(respuesta);
+
+        respuesta.chemicalProducts.forEach((element) => {
+          setNombresQuimicos((prevNombres) => [
+            ...prevNombres,
+            { label: element.name },
+          ]);
+        });
+
+        break;
+
+      case 401:
+        console.log(await response.json());
+
+        break;
+
+      case 500:
+        console.log(await response.json());
+
+        break;
+    }
+  };
+
+  //*Funcion para obtener el producto desde el inputSelect
+  const obtenerProducto = (nombresQuimico) => {
+    // const respuesta = data.chemicalProducts.find(
+    //   (element) => (element.name = nombresQuimico)
+    // );
+    setQuimico(
+      data.chemicalProducts.find((element) => element.name === nombresQuimico)
+    );
+    console.log(quimico);
+  };
+
+  const agregarAInventario = async (idProductoQuimico) => {
+    setHabilitar(true);
+    const response = await fetch(
+      "https://treea-piscinas-api.vercel.app/v1/chemical-inventory",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "x-token": localStorage.getItem("clave"),
+          "Content-Type": "application/json", // Asegúrate de incluir el tipo de contenido
+        },
+        body: JSON.stringify({
+          chemicalName: idProductoQuimico,
+          quantity: dataText.cantidad,
+          units: dataText.unidades,
+          lot: dataText.lote,
+          expirationDate: dataText.fecha, // Asegúrate de usar el formato correcto para la fecha
+        }),
+      }
+    );
+
+    switch (response.status) {
+      case 200:
+        setHabilitar(false);
+        console.log(await response.json());
+
+        break;
+
+      case 401:
+        console.log(await response.json());
+        setHabilitar(false);
+
+        break;
+
+      case 500:
+        console.log(await response.json());
+        setHabilitar(false);
+
+        break;
+    }
+    setHabilitar(false);
+  };
+
+  const listarinventarioId = async (idProductoQuimico) => {
+    const response = await fetch(
+      `https://treea-piscinas-api.vercel.app/v1/history-chemical-products/${idProductoQuimico}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "x-token": localStorage.getItem("clave"),
+        },
+      }
+    );
+
+    switch (response.status) {
+      case 200:
+        setinvenarioId(await response.json());
+        console.log(inventarioId.dataWithQuantity);
+
+        break;
+
+      case 401:
+        console.log(await response.json());
+
+        break;
+
+      case 500:
+        console.log(await response.json());
+
+        break;
+    }
+  };
+
+  useEffect(() => {
+    listarProductosQuimicos();
+  }, []);
+
+  useEffect(() => {
+    listarinventarioId(quimico?._id);
+  }, [quimico]);
 
   return (
     <Box sx={{ ...styles.generalContainer }}>
@@ -175,28 +372,44 @@ function AgregarInventario() {
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <InputSelect
+                        options={
+                          nombresQuimicos === ""
+                            ? [{ label: "No hay opciones" }]
+                            : nombresQuimicos
+                        }
                         label="Lista de quimicos"
                         icon={<Pool></Pool>}
+                        onChange={(e) => obtenerProducto(e.target.textContent)}
                       ></InputSelect>
                     </Grid>
 
                     <Grid item xs={6}>
                       <InputGeneral
+                        type="number"
                         label="Cantidad"
                         icon={<Pool></Pool>}
+                        name="cantidad"
+                        onChange={catchDataText}
                       ></InputGeneral>
                     </Grid>
                     <Grid item xs={6}>
-                      <InputGeneral
+                      <InputSelect
+                        options={listaUnidades}
                         label="Unidades"
                         icon={<Pool></Pool>}
-                      ></InputGeneral>
+                        name="unidades"
+                        onChange={(e) =>
+                          catchSelect("unidades", e.target.textContent)
+                        }
+                      ></InputSelect>
                     </Grid>
 
                     <Grid item xs={6}>
                       <InputGeneral
                         label="Lote"
                         icon={<Pool></Pool>}
+                        name="lote"
+                        onChange={catchDataText}
                       ></InputGeneral>
                     </Grid>
 
@@ -205,11 +418,27 @@ function AgregarInventario() {
                         label="Fecha"
                         type="date"
                         icon={<Pool></Pool>}
+                        name="fecha"
+                        onChange={catchDataText}
                       ></InputGeneral>
                     </Grid>
                     <Grid item xs={12}>
-                      <Button variant="contained" sx={{ ...styles.button }}>
-                        Guardar
+                      <Button
+                        disabled={habilitar}
+                        variant="contained"
+                        sx={{ ...styles.button }}
+                        onClick={() =>
+                          agregarAInventario(quimico?._id || "no data")
+                        }
+                      >
+                        {habilitar ? (
+                          <CircularProgress
+                            size={24}
+                            color="inherit"
+                          ></CircularProgress>
+                        ) : (
+                          "Guardar"
+                        )}
                       </Button>
                     </Grid>
                   </Grid>
@@ -219,19 +448,26 @@ function AgregarInventario() {
                     <Typography sx={{ ...styles.tittle }} y>
                       Nombre del químico{" "}
                     </Typography>
-                    <Typography>xxxxxxx</Typography>
+                    <Typography>{quimico?.name || "No data"} </Typography>
                     <Typography sx={{ ...styles.tittle }}>
                       Cantidad disponible{" "}
                     </Typography>
-                    <Typography>xxxxx</Typography>
+                    <Typography>
+                      {quimico?.availableQuantity?.toFixed(1)}{" "}
+                      {quimico?.units || "No data"}
+                    </Typography>
                   </Box>
                   <Box sx={{ ...styles.dibujo }}>dibujo</Box>
                 </Box>
               </Box>
               {/* Vista Inventario */}
-              <Box sx={{ ...stylesAnimation.dos }}>2</Box>
+              <Box sx={{ ...stylesAnimation.dos }}>
+                <TablaInventarioId
+                  data={inventarioId?.dataWithQuantity || "no data"}
+                ></TablaInventarioId>
+              </Box>
               {/* Vista Lote */}
-              <Box sx={{ ...stylesAnimation.tres }}>3</Box>
+              <Box sx={{ ...stylesAnimation.tres }}></Box>
             </Box>
 
             <Box sx={{ ...styles.containerFlechas }}>

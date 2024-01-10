@@ -310,6 +310,7 @@ export default function TemporaryDrawer({ abrirDrawer, cerraDrawer }) {
             <Collapse in={openParam} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
+                  onClick={() => navigate("/crearParametro")}
                   sx={{
                     pl: 4,
                     "&:hover": {
@@ -329,7 +330,7 @@ export default function TemporaryDrawer({ abrirDrawer, cerraDrawer }) {
                           },
                         }}
                       >
-                        Crar Parámetro
+                        Crear Parámetro
                       </Typography>
                     }
                   />
@@ -423,6 +424,7 @@ export default function TemporaryDrawer({ abrirDrawer, cerraDrawer }) {
             <Collapse in={openQuimicos} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
+                  onClick={() => navigate("/crearQuimico")}
                   sx={{
                     pl: 4,
                     "&:hover": {
@@ -452,6 +454,7 @@ export default function TemporaryDrawer({ abrirDrawer, cerraDrawer }) {
             <Collapse in={openQuimicos} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
+                  onClick={() => navigate("/agregarInventario")}
                   sx={{
                     pl: 4,
                     "&:hover": {

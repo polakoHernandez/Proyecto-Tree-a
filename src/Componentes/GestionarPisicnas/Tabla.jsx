@@ -13,6 +13,22 @@ const columns = [
   //   valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
   // },
   {
+    field: "poolId",
+    headerName: "Nombre",
+    width: 300,
+    headerAlign: "center",
+    valueGetter: (params) => params.row.poolId.name,
+    // El valueGetter te permite acceder a propiedades anidadas
+  },
+  {
+    field: "startDate",
+    headerName: "Fecha de inicio",
+    width: 300,
+    headerAlign: "center",
+
+    valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
+  },
+  {
     field: "endDate",
     headerName: "Fecha final",
     width: 300,
@@ -22,26 +38,18 @@ const columns = [
   },
 
   //Esto viene como un objeto con el nombre u
-  { field: "poolId", headerName: "poolId", width: 300, headerAlign: "center" },
-  {
-    field: "timeUse",
-    headerName: "Tiempo de uso",
-    width: 300,
-    headerAlign: "center",
-  },
   {
     field: "quantityPerson",
     headerName: "Cantidad de persona",
     width: 300,
     headerAlign: "center",
   },
+
   {
-    field: "startDate",
-    headerName: "Fecha de inicio",
+    field: "timeUse",
+    headerName: "Tiempo de uso",
     width: 300,
     headerAlign: "center",
-
-    valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
   },
 ];
 

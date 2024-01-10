@@ -602,9 +602,6 @@ function CrearPiscina() {
 
     console.log(data);
 
-    return;
-    // alert(data.filtro);
-
     setDeshabilitar(true);
 
     const formData = new FormData();

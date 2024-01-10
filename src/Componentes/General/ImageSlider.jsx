@@ -31,7 +31,7 @@ const Carousel = ({ data, obtenerId }) => {
   };
 
   useEffect(() => {
-    setMaxContador(data.poolCreatedByUser.length - 1);
+    // setMaxContador(data.poolCreatedByUser.length - 1);
   }, [data]);
   return (
     <Box
@@ -73,7 +73,7 @@ const Carousel = ({ data, obtenerId }) => {
         <KeyboardArrowDownIcon />
       </IconButton>
 
-      {data.poolCreatedByUser.map((pool) => (
+      {data.pools.map((pool) => (
         <Card
           onClick={() => obtenerId(pool._id)}
           id={pool._id}

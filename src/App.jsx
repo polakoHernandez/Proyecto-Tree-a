@@ -11,6 +11,7 @@ import MisPiscinas from "./Vistas/Piscina/MisPiscinas";
 import GestionarPiscinas from "./Vistas/Piscina/GestionarPiscinas";
 import CrearQuimico from "./Vistas/Quimicos/CrearQumico";
 import AgregarInventario from "./Vistas/Quimicos/AgregarInventario";
+import CrearParametro from "./Vistas/Parametros/CrearParametro";
 function App() {
   return (
     <>
@@ -51,6 +52,11 @@ function App() {
           <Route
             path="/agregarInventario"
             element={<AgregarInventario></AgregarInventario>}
+          ></Route>
+
+          <Route
+            path="/crearParametro"
+            element={<CrearParametro></CrearParametro>}
           ></Route>
         </Routes>
       </BrowserRouter>

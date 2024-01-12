@@ -13,9 +13,14 @@ import InputGeneral from "../../Componentes/General/InputGeneral";
 import InputSelect from "../../Componentes/General/InputSelect";
 import Tabla from "../../Componentes/Parametros/Tabla";
 import { Pool, Add, Delete } from "@mui/icons-material";
-import { json } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
 function EditarNorma() {
+  const location = useLocation();
+  const id = new URLSearchParams(location.search).get("Id");
+
+  //* estado para cargar la vista
+  const [mostrarVista, setMostrarVista] = useState(false);
+
   //* Estado para guardar la data de info general
   const [data, setData] = useState({
     nameNormativity: "",
@@ -138,11 +143,10 @@ function EditarNorma() {
 
   //*Funcion para listar norma por Id
   const listarNormaId = async (id) => {
-    setCargando(true);
     try {
       const tokenSend = localStorage.getItem("clave");
       const response = await fetch(
-        "https://pool-api-treea.vercel.app/v1/users",
+        `https://pool-api-treea.vercel.app/v1/normativity/${id}`,
         {
           method: "GET",
           headers: {
@@ -154,23 +158,20 @@ function EditarNorma() {
 
       switch (response.status) {
         case 401:
-          setCargando(false);
           setOpenModal(true);
           break;
 
         case 200:
-          const responeData = await response.json();
+          const normaRetornada = await response.json();
+          console.log(normaRetornada.normativityId);
+          setData(normaRetornada.normativityId);
+          setMostrarVista(true); // Muestra la vista al cargar los datos
 
-          console.log(responeData.users);
-          setData(responeData.users);
-          setCargando(false);
           break;
       }
     } catch (error) {
-      setCargando(false);
-      setOpenModal(true);
+      console.log(error);
     }
-    setCargando(false);
   };
 
   //*funcion para listar los parametros
@@ -476,6 +477,15 @@ function EditarNorma() {
     setReload(false);
   }, [reload]);
 
+  useEffect(() => {
+    listarNormaId(id);
+  }, []);
+
+  useEffect(() => {
+    // Verifica que la información se haya cargado correctamente en el estado
+    console.log(data);
+  }, [data]);
+
   return (
     <Box sx={{ ...styles.generalContainer }}>
       <SearchAppBar
@@ -509,6 +519,7 @@ function EditarNorma() {
                   elemento.typo === "text" ? (
                     <Grid item xs={12} sm={12} md={4} key={elemento.nombre}>
                       <InputGeneral
+                        value={elemento.value}
                         name={elemento.name}
                         onChange={catchData}
                         label={elemento.nombre}
@@ -518,6 +529,7 @@ function EditarNorma() {
                   ) : (
                     <Grid item xs={12} sm={12} md={4} key={elemento.nombre}>
                       <InputSelect
+                        value={{ label: elemento.value }}
                         onChange={(e) => catchDataSelect(e.target.textContent)}
                         options={listaOpciones}
                         label={elemento.nombre}
@@ -554,7 +566,7 @@ function EditarNorma() {
                         <InputGeneral
                           icon={<Pool></Pool>}
                           label="Parámetro"
-                          value={elemento.parameter}
+                          value={elemento.name}
                           name="name"
                           onChange={(e) =>
                             catchDataParametros(
@@ -567,6 +579,7 @@ function EditarNorma() {
                       </Grid>
                       <Grid item xs={12} sm={12} md={6}>
                         <InputSelect
+                          value={{ label: elemento.specification }}
                           icon={<Pool></Pool>}
                           label="Especificación"
                           options={listaEspecificaciones}
@@ -614,7 +627,7 @@ function EditarNorma() {
                       {elemento.specification === "Valor maximo" && (
                         <Grid item xs={12} sm={6}>
                           <InputGeneral
-                            value={elemento.maximo}
+                            value={elemento.maxValueSpecification}
                             icon={<Pool></Pool>}
                             label="Máximo"
                             name="maxValueSpecification"

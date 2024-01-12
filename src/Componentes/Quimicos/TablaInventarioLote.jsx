@@ -8,65 +8,32 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-function TablaInventarioId(data) {
+function TablaInventarioLote(data) {
   console.log({ Mydata: data });
   const columns = [
     {
-      field: "fecha",
-      headerName: "Fecha",
-      width: 200,
-      headerAlign: "center",
-      valueFormatter: (params) =>
-        new Date(
-          params == undefined
-            ? ""
-            : params.value === undefined
-            ? ""
-            : params.value
-        ).toLocaleDateString(),
-    },
-
-    {
-      field: "responsable",
-      headerName: "Responsable",
-      width: 200,
-      headerAlign: "center",
-    },
-
-    {
-      field: "productoQuimico",
-      headerName: "Nombre",
-      width: 200,
-      headerAlign: "center",
-    },
-    {
-      field: "lote",
+      field: "lot",
       headerName: "Lote",
-      width: 200,
+      width: 300,
+      headerAlign: "center",
+    },
+
+    {
+      field: "nameChemicalProduct",
+      headerName: "Nombre",
+      width: 300,
       headerAlign: "center",
     },
     {
-      field: "entrada",
-      headerName: "Entrada",
-      width: 200,
+      field: "quantityByLot",
+      headerName: "Cantidad",
+      width: 300,
       headerAlign: "center",
     },
     {
-      field: "cantidadDosificada",
-      headerName: "Cantidad dosificada",
-      width: 200,
-      headerAlign: "center",
-    },
-    {
-      field: "availableQuantity",
-      headerName: "Saldo",
-      width: 200,
-      headerAlign: "center",
-    },
-    {
-      field: "tipo",
-      headerName: "Tipo",
-      width: 200,
+      field: "quantityByLot",
+      headerName: "Unidad",
+      width: 300,
       headerAlign: "center",
     },
   ];
@@ -79,8 +46,8 @@ function TablaInventarioId(data) {
     <Box
       sx={{
         height: 380,
-        width: "98%",
-        marginLeft: "1%",
+        width: "95%",
+        marginLeft: "2.5%",
         marginTop: "5px",
         marginBottom: "60px",
         height: "300px",
@@ -106,4 +73,4 @@ function TablaInventarioId(data) {
   );
 }
 
-export default TablaInventarioId;
+export default TablaInventarioLote;

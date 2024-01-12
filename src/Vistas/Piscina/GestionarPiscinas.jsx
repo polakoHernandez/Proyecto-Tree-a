@@ -727,9 +727,9 @@ function GestionarPiscinas() {
                             <Typography
                               sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                             >
-                              Proundidad (m)
+                              Profundidad A (m)
                             </Typography>
-                            <Typography>{pool.maxDepth}</Typography>
+                            <Typography>{pool.depth.depthA}</Typography>
                           </Grid>
 
                           <Grid item xs={4} sx={{ textAlign: "center" }}>
@@ -738,7 +738,7 @@ function GestionarPiscinas() {
                             >
                               Profundidad B (m)
                             </Typography>
-                            <Typography>{pool.meanDepth}</Typography>
+                            <Typography>{pool.depth.depthB}</Typography>
                           </Grid>
 
                           <Grid item xs={4} sx={{ textAlign: "center" }}>
@@ -747,7 +747,33 @@ function GestionarPiscinas() {
                             >
                               Profundidad C (m)
                             </Typography>
+                            <Typography>{pool.depth.depthC}</Typography>
+                          </Grid>
+
+                          <Grid item xs={4} sx={{ textAlign: "center" }}>
+                            <Typography
+                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
+                            >
+                              Proundidad máxima (m)
+                            </Typography>
+                            <Typography>{pool.maxDepth}</Typography>
+                          </Grid>
+                          <Grid item xs={4} sx={{ textAlign: "center" }}>
+                            <Typography
+                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
+                            >
+                              Profundidad promedio (m)
+                            </Typography>
                             <Typography>{pool.minDepth}</Typography>
+                          </Grid>
+
+                          <Grid item xs={4} sx={{ textAlign: "center" }}>
+                            <Typography
+                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
+                            >
+                              Profundidad minima (m)
+                            </Typography>
+                            <Typography>{pool.meanDepth}</Typography>
                           </Grid>
                         </Grid>
                       </Box>
@@ -848,30 +874,76 @@ function GestionarPiscinas() {
                             </Typography>
                           </Grid>
 
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Filtro
-                            </Typography>
-                            <Typography>{pool.systemOperation}</Typography>
-                          </Grid>
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Altura del filtro
-                            </Typography>
-                            <Typography>{pool.caudal}</Typography>
-                          </Grid>
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Cantidad del filtro
-                            </Typography>
-                            <Typography>{pool.airConditioned}</Typography>
-                          </Grid>
+                          {pool === "" ? (
+                            <Typography>No data</Typography>
+                          ) : (
+                            pool.filters.map((elemento, index) => (
+                              <Grid
+                                container
+                                xs={12}
+                                marginTop={1}
+                                marginBottom={1}
+                              >
+                                <Grid xs={12}>
+                                  <Typography
+                                    sx={{
+                                      ...styles.fontTypografy,
+                                      width: "20%",
+                                      marginLeft: "40%",
+                                      borderBottom: "2px solid black",
+                                      marginBottom: "5px",
+                                    }}
+                                  >
+                                    Filtro {index + 1}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={4}>
+                                  <Typography sx={{ ...styles.fontTypografy }}>
+                                    Filtro
+                                  </Typography>
+                                  <Typography sx={{ ...styles.fontTexto }}>
+                                    {elemento.filter}
+                                  </Typography>
+                                </Grid>
+
+                                <Grid item xs={4}>
+                                  <Typography sx={{ ...styles.fontTypografy }}>
+                                    Altua del filtro
+                                  </Typography>
+                                  <Typography sx={{ ...styles.fontTexto }}>
+                                    {elemento.filterBedHeight}
+                                  </Typography>
+                                </Grid>
+
+                                <Grid item xs={4}>
+                                  <Typography sx={{ ...styles.fontTypografy }}>
+                                    Capacidad del filtro
+                                  </Typography>
+                                  <Typography sx={{ ...styles.fontTexto }}>
+                                    {elemento.filterCapacity}
+                                  </Typography>
+                                </Grid>
+
+                                <Grid item xs={4}>
+                                  <Typography sx={{ ...styles.fontTypografy }}>
+                                    Diametro del filtro
+                                  </Typography>
+                                  <Typography sx={{ ...styles.fontTexto }}>
+                                    {elemento.filterDiameter}
+                                  </Typography>
+                                </Grid>
+
+                                <Grid item xs={4}>
+                                  <Typography sx={{ ...styles.fontTypografy }}>
+                                    Filter Height
+                                  </Typography>
+                                  <Typography sx={{ ...styles.fontTexto }}>
+                                    {elemento.filterHeight}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            ))
+                          )}
 
                           <Grid item xs={12}>
                             <Typography
@@ -891,75 +963,99 @@ function GestionarPiscinas() {
                             </Typography>
                           </Grid>
 
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Caudal de bomba
-                            </Typography>
-                            <Typography>{pool.pumpFlow}</Typography>
-                          </Grid>
-
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Cantidad de bombas
-                            </Typography>
-                            <Typography>{pool.nPumps}</Typography>
-                          </Grid>
-
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Marca de bomba
-                            </Typography>
-                            <Typography>{pool.pumpBrand}</Typography>
-                          </Grid>
-
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Referencia de bomba
-                            </Typography>
-                            <Typography>{pool.referencePump}</Typography>
-                          </Grid>
-
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Foto placa de bomba
-                            </Typography>
-                            <a href={pool.platePhoto} target="_blank">
-                              <IconButton>
-                                <PictureAsPdfIcon
+                          {pool === "" ? (
+                            <Typography></Typography>
+                          ) : (
+                            pool.pumps.map((elemento, index) => (
+                              <Grid
+                                key={index}
+                                container
+                                xs={12}
+                                // sx={{ backgroundColor: "blue" }}
+                              >
+                                <Grid item xs={12}>
+                                  <Typography
+                                    sx={{
+                                      ...styles.fontTypografy,
+                                      width: "20%",
+                                      marginLeft: "40%",
+                                      borderBottom: "2px solid black",
+                                      marginBottom: "5px",
+                                    }}
+                                  >
+                                    Bomba {index + 1}
+                                  </Typography>
+                                </Grid>
+                                <Grid
+                                  xs={12}
                                   sx={{
-                                    color: "red",
+                                    // backgroundColor: "pink",
+                                    display: "flex",
+                                    justifyContent: "center",
                                   }}
-                                ></PictureAsPdfIcon>
-                              </IconButton>
-                            </a>
-                          </Grid>
+                                >
+                                  <img
+                                    src={elemento.platePhoto}
+                                    style={{
+                                      width: "300px",
+                                      height: "300px",
+                                      borderRadius: "5px",
+                                    }}
+                                  ></img>
+                                </Grid>
+                                <Grid xs={4}>
+                                  <Typography sx={{ ...styles.fontTypografy }}>
+                                    Marca
+                                  </Typography>
+                                  <Typography sx={{ ...styles.fontTexto }}>
+                                    {elemento.pumpBrand}
+                                  </Typography>
+                                </Grid>
 
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Ficha tecnica
-                            </Typography>
-                            <a href={pool.dataSheetPump} target="_blank">
-                              <IconButton>
-                                <PictureAsPdfIcon
-                                  sx={{
-                                    color: "red",
-                                  }}
-                                ></PictureAsPdfIcon>
-                              </IconButton>
-                            </a>
-                          </Grid>
+                                <Grid xs={4}>
+                                  <Typography sx={{ ...styles.fontTypografy }}>
+                                    Flujo
+                                  </Typography>
+                                  <Typography sx={{ ...styles.fontTexto }}>
+                                    {elemento.pumpFlow}
+                                  </Typography>
+                                </Grid>
+
+                                <Grid xs={4}>
+                                  <Typography sx={{ ...styles.fontTypografy }}>
+                                    Referencia
+                                  </Typography>
+                                  <Typography sx={{ ...styles.fontTexto }}>
+                                    {elemento.referencePump}
+                                  </Typography>
+                                </Grid>
+                                <Grid xs={4}>
+                                  <Typography sx={{ ...styles.fontTypografy }}>
+                                    DataSheet
+                                  </Typography>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <a
+                                      href={elemento.dataSheetPump}
+                                      target="_blank"
+                                    >
+                                      <IconButton>
+                                        <PictureAsPdfIcon
+                                          sx={{
+                                            color: "red",
+                                          }}
+                                        ></PictureAsPdfIcon>
+                                      </IconButton>
+                                    </a>
+                                  </Box>
+                                </Grid>
+                              </Grid>
+                            ))
+                          )}
 
                           <Grid item xs={12}>
                             <Typography
@@ -978,50 +1074,77 @@ function GestionarPiscinas() {
                               Sección de Calentador
                             </Typography>
                           </Grid>
-
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Cantidad de calentador
-                            </Typography>
-                            <Typography>{pool.heaterQuantity}</Typography>
-                          </Grid>
-
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Referencia del calentador
-                            </Typography>
-                            <Typography>{pool.heaterReference}</Typography>
-                          </Grid>
-
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Marca del calentador
-                            </Typography>
-                            <Typography>{pool.heaterBrand}</Typography>
-                          </Grid>
-
-                          <Grid item xs={4} sx={{ textAlign: "center" }}>
-                            <Typography
-                              sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                            >
-                              Ficha técnica del calentador
-                            </Typography>
-                            <a href={pool.dataSheetHeater} target="_blank">
-                              <IconButton>
-                                <PictureAsPdfIcon
-                                  sx={{
-                                    color: "red",
-                                  }}
-                                ></PictureAsPdfIcon>
-                              </IconButton>
-                            </a>
-                          </Grid>
+                          {pool === "" ? (
+                            <></>
+                          ) : (
+                            <>
+                              {pool.heaters.map((elemento, index) => (
+                                <Grid container key={index}>
+                                  <Grid item xs={12}>
+                                    <Typography
+                                      sx={{
+                                        ...styles.fontTypografy,
+                                        width: "20%",
+                                        marginLeft: "40%",
+                                        borderBottom: "2px solid black",
+                                        marginBottom: "5px",
+                                      }}
+                                    >
+                                      Calentador {index + 1}
+                                    </Typography>
+                                  </Grid>
+                                  <Grid xs={4}>
+                                    <Typography
+                                      sx={{ ...styles.fontTypografy }}
+                                    >
+                                      Referencia
+                                    </Typography>
+                                    <Typography sx={{ ...styles.fontTexto }}>
+                                      {elemento.heaterReference}
+                                    </Typography>
+                                  </Grid>
+                                  <Grid xs={4}>
+                                    <Typography
+                                      sx={{ ...styles.fontTypografy }}
+                                    >
+                                      Marca
+                                    </Typography>
+                                    <Typography sx={{ ...styles.fontTexto }}>
+                                      {elemento.heaterBrand}
+                                    </Typography>
+                                  </Grid>
+                                  <Grid xs={4}>
+                                    <Typography
+                                      sx={{ ...styles.fontTypografy }}
+                                    >
+                                      DataSheet
+                                    </Typography>
+                                    <Typography>
+                                      <Box
+                                        sx={{
+                                          display: "flex",
+                                          justifyContent: "center",
+                                        }}
+                                      >
+                                        <a
+                                          href={elemento.dataSheetHeater}
+                                          target="_blank"
+                                        >
+                                          <IconButton>
+                                            <PictureAsPdfIcon
+                                              sx={{
+                                                color: "red",
+                                              }}
+                                            ></PictureAsPdfIcon>
+                                          </IconButton>
+                                        </a>
+                                      </Box>
+                                    </Typography>
+                                  </Grid>
+                                </Grid>
+                              ))}
+                            </>
+                          )}
                         </Grid>
                       </Box>
                     </Box>
@@ -1250,5 +1373,15 @@ const styles = {
     overflowX: "hidden",
     height: "100vh",
     // backgroundColor: "red",
+  },
+  fontTypografy: {
+    fontFamily: "'Nunito Sans', sans-serif",
+    display: "flex",
+    justifyContent: "center",
+  },
+
+  fontTexto: {
+    display: "flex",
+    justifyContent: "center",
   },
 };

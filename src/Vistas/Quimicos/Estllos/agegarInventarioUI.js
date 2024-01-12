@@ -23,15 +23,15 @@ const styles = {
   },
 
   tabs: {
-    backgroundColor: "white",
-    width: "30%",
+    // backgroundColor: "red",
+    width: { xs: "70%", sm: "50%", md: "30%" },
     display: "flex",
     justifyContent: "space-between",
   },
 
   actual: {
     backgroundColor: "rgb(0, 164, 228)",
-    width: "10%",
+    width: { xs: "20%", sm: "20%", md: "10%" },
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

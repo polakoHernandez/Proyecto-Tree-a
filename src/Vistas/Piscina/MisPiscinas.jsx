@@ -477,27 +477,71 @@ function MisPiscinas() {
                         <Typography
                           sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                         >
-                          Proundidad
+                          Profundidad A (m)
                         </Typography>
-                        <Typography>{pool.maxDepth}</Typography>
+                        <Typography>
+                          {pool.depth && pool.depth.depthA !== undefined
+                            ? pool.depth.depthA
+                            : ""}
+                        </Typography>
                       </Grid>
 
                       <Grid item xs={4} sx={{ textAlign: "center" }}>
                         <Typography
                           sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                         >
-                          Profundidad B
+                          Profundidad B (m)
                         </Typography>
-                        <Typography>{pool.meanDepth}</Typography>
+                        <Typography>
+                          {pool.depth && pool.depth.depthB !== undefined
+                            ? pool.depth.depthB
+                            : ""}
+                        </Typography>
                       </Grid>
 
                       <Grid item xs={4} sx={{ textAlign: "center" }}>
                         <Typography
                           sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
                         >
-                          Profundidad C
+                          Profundidad C (m)
                         </Typography>
-                        <Typography>{pool.minDepth}</Typography>
+                        <Typography>
+                          {pool.depth && pool.depth.depthC !== undefined
+                            ? pool.depth.depthC
+                            : ""}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item xs={4} sx={{ textAlign: "center" }}>
+                        <Typography
+                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
+                        >
+                          Proundidad máxima (m)
+                        </Typography>
+                        <Typography>
+                          {pool.maxDepth === undefined ? "" : pool.maxDepth}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={4} sx={{ textAlign: "center" }}>
+                        <Typography
+                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
+                        >
+                          Profundidad minima (m)
+                        </Typography>
+                        <Typography>
+                          {pool.minDepth === undefined ? "" : pool.minDepth}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item xs={4} sx={{ textAlign: "center" }}>
+                        <Typography
+                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
+                        >
+                          Profundidad media (m)
+                        </Typography>
+                        <Typography>
+                          {pool.meanDepth === undefined ? "" : pool.meanDepth}
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Box>

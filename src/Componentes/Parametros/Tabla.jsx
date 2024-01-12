@@ -160,7 +160,7 @@ export default function DataGridDemo({
           sx={{ display: "flex", justifyContent: "space-around", width: "90%" }}
         >
           <Tooltip title="Editar">
-            <IconButton onClick={() => editarPersona(params.row)}>
+            <IconButton onClick={() => editarNorma(params.row._id)}>
               <EditIcon sx={{ color: "green" }}></EditIcon>
             </IconButton>
           </Tooltip>
@@ -195,20 +195,8 @@ export default function DataGridDemo({
     setOpen(true);
   };
 
-  const editarPersona = (data) => {
-    const { _id, ID, name, lastName, email, cellPhone, role } = data;
-
-    navigate(`/EditarUsuario?data=${data}`, {
-      state: {
-        _id,
-        ID,
-        name,
-        lastName,
-        email,
-        cellPhone,
-        role,
-      },
-    });
+  const editarNorma = (id) => {
+    navigate(`/editarNorma?Id=${id}`);
   };
 
   return (

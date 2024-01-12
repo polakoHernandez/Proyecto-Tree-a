@@ -15,7 +15,7 @@ import Tabla from "../../Componentes/Parametros/Tabla";
 import { Pool, Add, Delete } from "@mui/icons-material";
 import { json } from "react-router-dom";
 
-function CrearParametro() {
+function EditarNorma() {
   //* Estado para guardar la data de info general
   const [data, setData] = useState({
     nameNormativity: "",
@@ -134,6 +134,43 @@ function CrearParametro() {
   const handleReloadData = () => {
     // Set reload flag to true to trigger data reload in DataGridDemo
     setReload(true);
+  };
+
+  //*Funcion para listar norma por Id
+  const listarNormaId = async (id) => {
+    setCargando(true);
+    try {
+      const tokenSend = localStorage.getItem("clave");
+      const response = await fetch(
+        "https://pool-api-treea.vercel.app/v1/users",
+        {
+          method: "GET",
+          headers: {
+            Accpet: "Application/json",
+            "x-token": tokenSend,
+          },
+        }
+      );
+
+      switch (response.status) {
+        case 401:
+          setCargando(false);
+          setOpenModal(true);
+          break;
+
+        case 200:
+          const responeData = await response.json();
+
+          console.log(responeData.users);
+          setData(responeData.users);
+          setCargando(false);
+          break;
+      }
+    } catch (error) {
+      setCargando(false);
+      setOpenModal(true);
+    }
+    setCargando(false);
   };
 
   //*funcion para listar los parametros
@@ -657,4 +694,4 @@ function CrearParametro() {
   );
 }
 
-export default CrearParametro;
+export default EditarNorma;

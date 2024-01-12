@@ -17,6 +17,7 @@ import {
 import InputSelect from "../../Componentes/General/InputSelect";
 import InputGeneral from "../../Componentes/General/InputGeneral";
 import TablaInventarioId from "../../Componentes/Quimicos/TablaInventarioId";
+import TablaInventarioLote from "../../Componentes/Quimicos/TablaInventarioLote";
 
 function AgregarInventario() {
   const [mover, setMover] = useState(false); //MOvercon Piscina
@@ -36,6 +37,12 @@ function AgregarInventario() {
 
   //*estado para guardar data del reotrno por Id
   const [inventarioId, setinvenarioId] = useState([]);
+
+  //*estado para guardar inventario por lote
+  const [InventarioLote, setInventarioLote] = useState([]);
+
+  //* estado para armar la data que voy a mostrar en Inventario Lote
+  const [armar, setArmar] = useState([]);
 
   //*Estados para guardar los datos de los texfield
   const [dataText, setDataText] = useState({
@@ -135,40 +142,60 @@ function AgregarInventario() {
     },
 
     agregar: {
-      backgroundColor: "rgb(0,164,228)",
-      color: "white",
+      backgroundColor: contador === 1 ? "white" : "rgb(0,164,228)",
+      color: contador === 1 ? "black" : "white",
+      border: contador === 1 ? "1px solid black" : "",
       fontFamily: "'Nunito Sans', sans-serif",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      width: "35%",
+      width: { xs: "30%", sm: "30%", md: "35%" },
       borderRadius: "10px 0px 0px 0px",
       borderRight: "1px solid white",
       cursor: "pointer",
+      "&:hover": {
+        color: "black",
+        backgroundColor: "white",
+        border: "1px solid black",
+      },
     },
 
     inventario: {
-      backgroundColor: "rgb(0,164,228)",
-      color: "white",
+      backgroundColor: contador === 2 ? "white" : "rgb(0,164,228)",
+      color: contador === 2 ? "black" : "white",
+      border: contador === 2 ? "1px solid black" : "",
+
       fontFamily: "'Nunito Sans', sans-serif",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      width: "35%",
+      width: { xs: "30%", sm: "40%", md: "35%" },
       borderRight: "1px solid white",
       cursor: "pointer",
+      "&:hover": {
+        color: "black",
+        backgroundColor: "white",
+        border: "1px solid black",
+      },
     },
 
     lote: {
-      backgroundColor: "rgb(0,164,228)",
-      color: "white",
+      backgroundColor: contador === 3 ? "white" : "rgb(0,164,228)",
+      color: contador === 3 ? "black" : "white",
+      border: contador === 3 ? "1px solid black" : "",
+
       fontFamily: "'Nunito Sans', sans-serif",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      width: "30%",
+      width: { xs: "40%", sm: "30%", md: "35%" },
       borderRadius: "0px 10px 0px 0px",
       cursor: "pointer",
+      "&:hover": {
+        color: "black",
+        backgroundColor: "white",
+        border: "1px solid black",
+      },
     },
 
     uno: {
@@ -182,13 +209,13 @@ function AgregarInventario() {
     dos: {
       // backgroundColor: "blue",
       height: "100%",
-      display: contador === 2 ? "flex" : "none",
+      display: contador === 2 ? "block" : "none",
     },
 
     tres: {
-      backgroundColor: "gray",
+      // backgroundColor: "gray",
       height: "100%",
-      display: contador === 3 ? "flex" : "none",
+      display: contador === 3 ? "content" : "none",
     },
   };
   const listaUnidades = [
@@ -253,6 +280,7 @@ function AgregarInventario() {
     // const respuesta = data.chemicalProducts.find(
     //   (element) => (element.name = nombresQuimico)
     // );
+    console.log(nombresQuimico);
     setQuimico(
       data.chemicalProducts.find((element) => element.name === nombresQuimico)
     );
@@ -317,7 +345,9 @@ function AgregarInventario() {
     switch (response.status) {
       case 200:
         setinvenarioId(await response.json());
-        console.log(inventarioId.dataWithQuantity);
+        setInventarioLote(inventarioId);
+        console.log({ cambiar: inventarioId.dataWithQuantity });
+        console.log({ InventarioId: inventarioId.inventoryByLot });
 
         break;
 
@@ -327,6 +357,38 @@ function AgregarInventario() {
         break;
 
       case 500:
+        setinvenarioId("");
+        console.log(await response.json());
+
+        break;
+    }
+  };
+
+  const listarInventarioLote = async (idProductoQuimico) => {
+    const response = await fetch(
+      `https://treea-piscinas-api.vercel.app/v1/chemical-inventory/${idProductoQuimico}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "x-token": localStorage.getItem("clave"),
+        },
+      }
+    );
+
+    switch (response.status) {
+      case 200:
+        setInventarioLote(await response.json());
+
+        break;
+
+      case 401:
+        console.log(await response.json());
+
+        break;
+
+      case 500:
+        setinvenarioId("");
         console.log(await response.json());
 
         break;
@@ -339,6 +401,10 @@ function AgregarInventario() {
 
   useEffect(() => {
     listarinventarioId(quimico?._id);
+  }, [quimico]);
+
+  useEffect(() => {
+    listarInventarioLote(quimico?._id);
   }, [quimico]);
 
   return (
@@ -354,13 +420,24 @@ function AgregarInventario() {
         <Box sx={{ ...styles.container }}>
           <Box sx={{ ...styles.encabezado }}>
             <Box sx={{ ...styles.tabs }}>
-              <Typography sx={{ ...stylesAnimation.agregar }}>
+              <Typography
+                sx={{ ...stylesAnimation.agregar }}
+                onClick={() => setContador(1)}
+              >
                 Agregar
               </Typography>
-              <Typography sx={{ ...stylesAnimation.inventario }}>
+              <Typography
+                sx={{ ...stylesAnimation.inventario }}
+                onClick={() => setContador(2)}
+              >
                 Inventario
               </Typography>
-              <Typography sx={{ ...stylesAnimation.lote }}>Lote</Typography>
+              <Typography
+                sx={{ ...stylesAnimation.lote }}
+                onClick={() => setContador(3)}
+              >
+                Lote
+              </Typography>
             </Box>
             <Typography sx={{ ...styles.actual }}>Inventario</Typography>
           </Box>
@@ -462,12 +539,40 @@ function AgregarInventario() {
               </Box>
               {/* Vista Inventario */}
               <Box sx={{ ...stylesAnimation.dos }}>
+                <Grid item xs={12}>
+                  <InputSelect
+                    options={
+                      nombresQuimicos === ""
+                        ? [{ label: "No hay opciones" }]
+                        : nombresQuimicos
+                    }
+                    label="Lista de quimicos"
+                    icon={<Pool></Pool>}
+                    onChange={(e) => obtenerProducto(e.target.textContent)}
+                  ></InputSelect>
+                </Grid>
                 <TablaInventarioId
                   data={inventarioId?.dataWithQuantity || "no data"}
                 ></TablaInventarioId>
               </Box>
               {/* Vista Lote */}
-              <Box sx={{ ...stylesAnimation.tres }}></Box>
+              <Box sx={{ ...stylesAnimation.tres }}>
+                <Grid item xs={12}>
+                  <InputSelect
+                    options={
+                      nombresQuimicos === ""
+                        ? [{ label: "No hay opciones" }]
+                        : nombresQuimicos
+                    }
+                    label="Lista de quimicos"
+                    icon={<Pool></Pool>}
+                    onChange={(e) => obtenerProducto(e.target.textContent)}
+                  ></InputSelect>
+                </Grid>
+                <TablaInventarioLote
+                  data={inventarioId?.inventoryByLot || "no data"}
+                ></TablaInventarioLote>
+              </Box>
             </Box>
 
             <Box sx={{ ...styles.containerFlechas }}>

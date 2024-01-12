@@ -13,6 +13,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate } from "react-router-dom";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 import PersonIcon from "@mui/icons-material/Person";
+import ModalData from "../Parametros/ModalData";
 
 export default function DataGridDemo({
   data,
@@ -27,9 +28,9 @@ export default function DataGridDemo({
   const navigate = useNavigate("");
 
   const [habilitar, setHabilitar] = useState(false);
+  const [datosRow, setDatosRows] = useState("");
 
   //Datos para mostrar en la modal
-  const [datosRow, setDatosRows] = useState("");
 
   //Estaod para abrir la modal
   const [open, setOpen] = useState(false);
@@ -234,6 +235,7 @@ export default function DataGridDemo({
         }
         getCellClassName={(params) => "cell"}
       />
+      <ModalData data={datosRow} open={open} close={close}></ModalData>
     </Box>
   );
 }

@@ -45,9 +45,9 @@ export default function DataGridDemo({
 
     if (state === true) {
       const respuesta = await fetch(
-        `https://pool-api-treea.vercel.app/v1/user/${idUsuario}`,
+        `https://pool-api-treea.vercel.app/v1/deactivate-normativity/${idUsuario}`,
         {
-          method: "DELETE",
+          method: "PUT",
           headers: {
             Accpet: "Application/json",
             "x-token": localStorage.getItem("clave"),
@@ -78,7 +78,7 @@ export default function DataGridDemo({
       }
     } else if (state === false) {
       const respuesta = await fetch(
-        `https://pool-api-treea.vercel.app/v1/activate-user/${idUsuario}`,
+        `https://pool-api-treea.vercel.app/v1/activate-normativity/${idUsuario}`,
         {
           method: "PUT",
           headers: {
@@ -91,8 +91,8 @@ export default function DataGridDemo({
       switch (respuesta.status) {
         case 200:
           console.log(await respuesta.json());
-          reloadData();
           setHabilitar(false);
+          reloadData();
           break;
 
         case 500:
@@ -109,6 +109,7 @@ export default function DataGridDemo({
 
     // console.log(await respuesta.json());
     // reloadData();
+    setHabilitar(false);
   };
 
   const columns = [

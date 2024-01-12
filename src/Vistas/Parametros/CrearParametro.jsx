@@ -29,6 +29,9 @@ function CrearParametro() {
   const [mensaje, setMensaje] = useState("");
   const [color, setColor] = useState("");
 
+  //*Estao para renderizar el front
+  const [reload, setReload] = useState(false);
+
   const catchEspecificacion = (value, index) => {
     const newData = { ...data };
     newData.parameter[index].specification = value;
@@ -126,6 +129,12 @@ function CrearParametro() {
 
   //* Estado ara guradar lo parametros
   const [listaParametros, setLisaParametros] = useState([]);
+
+  //*Funcion para renderizar el front
+  const handleReloadData = () => {
+    // Set reload flag to true to trigger data reload in DataGridDemo
+    setReload(true);
+  };
 
   //*funcion para listar los parametros
   const listarParametros = async () => {
@@ -421,6 +430,11 @@ function CrearParametro() {
     listarParametros();
   }, []);
 
+  useEffect(() => {
+    listarParametros();
+    setReload(false);
+  }, [reload]);
+
   return (
     <Box sx={{ ...styles.generalContainer }}>
       <SearchAppBar
@@ -619,6 +633,7 @@ function CrearParametro() {
           </Box>
           <Box sx={{ ...styles.vistaNormas }}>
             <Tabla
+              reloadData={handleReloadData}
               data={
                 listaParametros.length === 0
                   ? ""
@@ -626,22 +641,6 @@ function CrearParametro() {
               }
             ></Tabla>
           </Box>
-          {/* <Grid item xs={12}>
-            <Button
-              sx={{
-                ...styles.guardar,
-              }}
-              onClick={crearNorma}
-              variant="contained"
-              disabled={deshabilitar}
-            >
-              {deshabilitar ? (
-                <CircularProgress color="inherit" size={24}></CircularProgress>
-              ) : (
-                "Guardar"
-              )}
-            </Button>
-          </Grid> */}
         </Box>
       </Box>
       <Alertas

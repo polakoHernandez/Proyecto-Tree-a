@@ -696,109 +696,103 @@ function MisPiscinas() {
                       <Box
                         sx={{
                           ...styles.boxListadoFiltros,
+                          // backgroundColor: "red",
                         }}
                       >
                         {pool === "" ? (
                           <Typography></Typography>
                         ) : (
-                          pool.pumps.map((elemento) => (
-                            <Grid container xs={12}>
-                              <Grid sx={12}>
+                          pool.pumps.map((elemento, index) => (
+                            <Grid
+                              key={index}
+                              container
+                              xs={12}
+                              // sx={{ backgroundColor: "blue" }}
+                            >
+                              <Grid item xs={12}>
+                                <Typography
+                                  sx={{
+                                    ...styles.fontTypografy,
+                                    width: "20%",
+                                    marginLeft: "40%",
+                                    borderBottom: "2px solid black",
+                                    marginBottom: "5px",
+                                  }}
+                                >
+                                  Bomba {index + 1}
+                                </Typography>
+                              </Grid>
+                              <Grid
+                                xs={12}
+                                sx={{
+                                  // backgroundColor: "pink",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
                                 <img
                                   src={elemento.platePhoto}
-                                  style={{ width: "100px", height: "100px" }}
+                                  style={{
+                                    width: "300px",
+                                    height: "300px",
+                                    borderRadius: "5px",
+                                  }}
                                 ></img>
                               </Grid>
                               <Grid xs={4}>
-                                <Typography>PumBrand</Typography>
-                                <Typography>{elemento.pumpBrand}</Typography>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  Marca
+                                </Typography>
+                                <Typography sx={{ ...styles.fontTexto }}>
+                                  {elemento.pumpBrand}
+                                </Typography>
                               </Grid>
 
                               <Grid xs={4}>
-                                <Typography>PumFlow</Typography>
-                                <Typography>{elemento.pumpFlow}</Typography>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  Flujo
+                                </Typography>
+                                <Typography sx={{ ...styles.fontTexto }}>
+                                  {elemento.pumpFlow}
+                                </Typography>
                               </Grid>
 
                               <Grid xs={4}>
-                                <Typography>referencePum</Typography>
-                                <Typography>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  Referencia
+                                </Typography>
+                                <Typography sx={{ ...styles.fontTexto }}>
                                   {elemento.referencePump}
                                 </Typography>
+                              </Grid>
+                              <Grid xs={4}>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  DataSheet
+                                </Typography>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  <a
+                                    href={elemento.dataSheetPump}
+                                    target="_blank"
+                                  >
+                                    <IconButton>
+                                      <PictureAsPdfIcon
+                                        sx={{
+                                          color: "red",
+                                        }}
+                                      ></PictureAsPdfIcon>
+                                    </IconButton>
+                                  </a>
+                                </Box>
                               </Grid>
                             </Grid>
                           ))
                         )}
                       </Box>
-
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Caudal de bomba
-                        </Typography>
-                        <Typography>{pool.pumpFlow}</Typography>
-                      </Grid>
-
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Cantidad de bombas
-                        </Typography>
-                        <Typography>{pool.nPumps}</Typography>
-                      </Grid>
-
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Marca de bomba
-                        </Typography>
-                        <Typography>{pool.pumpBrand}</Typography>
-                      </Grid>
-
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Referencia de bomba
-                        </Typography>
-                        <Typography>{pool.referencePump}</Typography>
-                      </Grid>
-
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Foto placa de bomba
-                        </Typography>
-                        <a href={pool.platePhoto} target="_blank">
-                          <IconButton>
-                            <PictureAsPdfIcon
-                              sx={{
-                                color: "red",
-                              }}
-                            ></PictureAsPdfIcon>
-                          </IconButton>
-                        </a>
-                      </Grid>
-
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Ficha tecnica
-                        </Typography>
-                        <a href={pool.dataSheetPump} target="_blank">
-                          <IconButton>
-                            <PictureAsPdfIcon
-                              sx={{
-                                color: "red",
-                              }}
-                            ></PictureAsPdfIcon>
-                          </IconButton>
-                        </a>
-                      </Grid>
 
                       <Grid item xs={12}>
                         <Typography
@@ -817,50 +811,71 @@ function MisPiscinas() {
                           Sección de Calentador
                         </Typography>
                       </Grid>
-
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Cantidad de calentador
-                        </Typography>
-                        <Typography>{pool.heaterQuantity}</Typography>
-                      </Grid>
-
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Referencia del calentador
-                        </Typography>
-                        <Typography>{pool.heaterReference}</Typography>
-                      </Grid>
-
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Marca del calentador
-                        </Typography>
-                        <Typography>{pool.heaterBrand}</Typography>
-                      </Grid>
-
-                      <Grid item xs={4} sx={{ textAlign: "center" }}>
-                        <Typography
-                          sx={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                        >
-                          Ficha técnica del calentador
-                        </Typography>
-                        <a href={pool.dataSheetHeater} target="_blank">
-                          <IconButton>
-                            <PictureAsPdfIcon
-                              sx={{
-                                color: "red",
-                              }}
-                            ></PictureAsPdfIcon>
-                          </IconButton>
-                        </a>
-                      </Grid>
+                      {pool === "" ? (
+                        <></>
+                      ) : (
+                        <>
+                          {pool.heaters.map((elemento, index) => (
+                            <Grid container key={index}>
+                              <Grid item xs={12}>
+                                <Typography
+                                  sx={{
+                                    ...styles.fontTypografy,
+                                    width: "20%",
+                                    marginLeft: "40%",
+                                    borderBottom: "2px solid black",
+                                    marginBottom: "5px",
+                                  }}
+                                >
+                                  Calentador {index + 1}
+                                </Typography>
+                              </Grid>
+                              <Grid xs={4}>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  Referencia
+                                </Typography>
+                                <Typography sx={{ ...styles.fontTexto }}>
+                                  {elemento.heaterReference}
+                                </Typography>
+                              </Grid>
+                              <Grid xs={4}>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  Marca
+                                </Typography>
+                                <Typography sx={{ ...styles.fontTexto }}>
+                                  {elemento.heaterBrand}
+                                </Typography>
+                              </Grid>
+                              <Grid xs={4}>
+                                <Typography sx={{ ...styles.fontTypografy }}>
+                                  DataSheet
+                                </Typography>
+                                <Typography>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <a
+                                      href={elemento.dataSheetHeater}
+                                      target="_blank"
+                                    >
+                                      <IconButton>
+                                        <PictureAsPdfIcon
+                                          sx={{
+                                            color: "red",
+                                          }}
+                                        ></PictureAsPdfIcon>
+                                      </IconButton>
+                                    </a>
+                                  </Box>
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          ))}
+                        </>
+                      )}
                     </Grid>
                   </Box>
                 </Box>

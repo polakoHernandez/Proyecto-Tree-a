@@ -1,19 +1,75 @@
 import React, { useEffect, useState } from "react";
 import SearchAppBar from "../../Componentes/General/NavBar";
-import { Box, Typography, Grid, TextField, IconButton } from "@mui/material";
+import Alertas from "../../Componentes/General/Alertas";
+import {
+  Box,
+  Typography,
+  Grid,
+  IconButton,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import InputGeneral from "../../Componentes/General/InputGeneral";
 import InputSelect from "../../Componentes/General/InputSelect";
 import Tabla from "../../Componentes/Parametros/Tabla";
-import { Pool, Add } from "@mui/icons-material";
+import { Pool, Add, Delete } from "@mui/icons-material";
+import { json } from "react-router-dom";
 
 function CrearParametro() {
   //* Estado para guardar la data de info general
   const [data, setData] = useState({
-    nombreNorma: "",
-    descripcion: "",
-    tipoAgua: "",
-    parametros: [{ parametro: "", especificacion: "" }],
+    nameNormativity: "",
+    description: "",
+    typeOfWater: "",
+    name: "",
+    parameter: [{ name: "", specification: "" }],
   });
+  const [deshabilitar, setDeshabilitar] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+  const [color, setColor] = useState("");
+
+  const catchEspecificacion = (value, index) => {
+    const newData = { ...data };
+    newData.parameter[index].specification = value;
+
+    // Eliminar propiedades existentes
+    delete newData.parameter[index].minRange;
+    delete newData.parameter[index].maxRange;
+    delete newData.parameter[index].maxValueSpecification;
+    delete newData.parameter[index].analysisReport;
+
+    // Agregar propiedades según la especificación
+    if (value === "Rango") {
+      // Validar y quitar 'analysisReport' si existe
+      if (newData.parameter[index].analysisReport) {
+        delete newData.parameter[index].analysisReport;
+      }
+    } else if (value === "Valor máximo") {
+      // Validar y quitar 'analysisReport' si existe
+      if (newData.parameter[index].analysisReport) {
+        delete newData.parameter[index].analysisReport;
+      }
+    } else if (value === "Análisis y reporte") {
+      // Validar y quitar 'minRange' y 'maxRange' si existen
+      if (newData.parameter[index].minRange) {
+        delete newData.parameter[index].minRange;
+      }
+      if (newData.parameter[index].maxRange) {
+        delete newData.parameter[index].maxRange;
+      }
+      // Validar y quitar 'maximo' si existe
+      if (newData.parameter[index].maxValueSpecification) {
+        delete newData.parameter[index].maxValueSpecification;
+      }
+
+      // Agregar 'analysisReport'
+      newData.parameter[index].analysisReport = ""; // Puedes asignar un valor por defecto si es necesario
+    }
+
+    setData(newData);
+    console.log(data);
+  };
 
   //*Funciones ara capturar la data de inforGeneral
   const catchData = (e) => {
@@ -27,16 +83,45 @@ function CrearParametro() {
   const catchDataSelect = (value) => {
     setData((prevData) => ({
       ...prevData,
-      tipoAgua: value,
+      typeOfWater: value,
     }));
   };
 
-  //*funcion  para aregar mas inputs
+  //*funcion  para aregar y quitar inputs
   const agregar = () => {
     setData((prevData) => ({
       ...prevData,
-      parametros: [...prevData.parametros, { parametro: "", nombre: "" }],
+      parameter: [...prevData.parameter, { name: "", specification: "" }],
     }));
+  };
+
+  const quitar = (indice) => {
+    if (indice === 0) {
+      return;
+    }
+
+    setData((prevData) => ({
+      ...prevData,
+      parameter: prevData.parameter
+        .slice(0, indice)
+        .concat(prevData.parameter.slice(indice + 1)),
+    }));
+  };
+
+  //*Funcion para capturara la data de parametros
+  const catchDataParametros = (index, name, value) => {
+    setData((prevData) => {
+      const updatedParametros = [...prevData.parameter];
+      updatedParametros[index] = {
+        ...updatedParametros[index],
+        [name]: value,
+      };
+
+      return {
+        ...prevData,
+        parameter: updatedParametros,
+      };
+    });
   };
 
   //* Estado ara guradar lo parametros
@@ -72,6 +157,66 @@ function CrearParametro() {
     }
   };
 
+  const crearNorma = async () => {
+    setDeshabilitar(true);
+
+    const response = await fetch(
+      "https://treea-piscinas-api.vercel.app/v1/normativity",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "x-token": localStorage.getItem("clave"),
+          "Content-Type": "application/json", // Añadido Content-Type
+        },
+        body: JSON.stringify({
+          nameNormativity: data.nameNormativity,
+          description: data.description,
+          typeOfWater: data.typeOfWater,
+          parameter: data.parameter,
+        }),
+      }
+    );
+
+    switch (response.status) {
+      case 200:
+        const result = await response.json();
+        console.log(result);
+        setOpen(true);
+        setMensaje("Norma Creada exitosamente!");
+        setColor("success");
+        setDeshabilitar(false);
+
+        break;
+
+      case 400:
+        console.log(await response.json());
+        setOpen(true);
+        setMensaje("Todos los campos son obligatorios");
+        setColor("error");
+        setDeshabilitar(false);
+
+        break;
+
+      case 401:
+        console.log(await response.json());
+        setOpen(true);
+        setMensaje("Token no valido");
+        setColor("error");
+        setDeshabilitar(false);
+
+        break;
+    }
+
+    try {
+    } catch (error) {
+      console.log(error);
+      setOpen(true);
+      setMensaje("Error en el servidor");
+      setColor("error");
+      setDeshabilitar(false);
+    }
+  };
   //*ontaodor para mostrar las vistas
   const [contador, setContador] = useState(1);
 
@@ -148,6 +293,8 @@ function CrearParametro() {
     },
 
     containerFormulario: {
+      backgroundColor: "blue",
+      overflowX: "scroll",
       height: "82%",
       boxShadow: "0px 5px 5px 0px black",
       backgroundColor: "white",
@@ -156,8 +303,9 @@ function CrearParametro() {
     },
 
     listaNormas: {
-      backgroundColor: "rgb(0,164,228)",
-      color: "white",
+      backgroundColor: contador === 2 ? "white" : "rgb(0,164,228)",
+      color: contador === 2 ? "black" : "white",
+      border: contador === 2 ? "1px solid black" : "",
       width: "150px",
       display: "flex",
       justifyContent: "center",
@@ -165,11 +313,17 @@ function CrearParametro() {
       fontFamily: "'Nunito Sans', sans-serif",
       borderRadius: "5px 5px 0px 0px",
       cursor: "pointer",
+      "&:hover": {
+        backgroundColor: "white",
+        color: "black",
+        border: "1px solid black",
+      },
     },
 
     crearNorma: {
-      backgroundColor: "rgb(0,164,228)",
-      color: "white",
+      backgroundColor: contador === 1 ? "white" : "rgb(0,164,228)",
+      color: contador === 1 ? "black" : "white",
+      border: contador === 1 ? "1px solid black" : "",
       width: "150px",
       display: "flex",
       justifyContent: "center",
@@ -180,9 +334,10 @@ function CrearParametro() {
     },
 
     containerGrid: {
-      // backgroundColor: "red",
+      //!backgroundColor: "red",
       width: "90%",
       marginLeft: "5%",
+      overflowX: "scroll",
     },
 
     titulo: {
@@ -204,28 +359,35 @@ function CrearParametro() {
       display: contador === 2 ? "flex" : "none",
       height: "100%",
     },
+
+    guardar: {
+      width: "95%",
+      marginLeft: "2.5%",
+      marginTop: "20px",
+      marginBottom: "20px",
+    },
   };
 
   const InfoGeneral = [
     {
       nombre: "Nombre de la norma",
       typo: "text",
-      name: "nombreNorma",
-      value: data.nombreNorma,
+      name: "nameNormativity",
+      value: data.nameNormativity,
     },
 
     {
       nombre: "Descripcion",
       typo: "text",
-      name: "descripcion",
-      value: data.descripcion,
+      name: "description",
+      value: data.description,
     },
 
     {
       nombre: "Tip de agua",
       typo: "select",
-      name: "tipoAgu",
-      value: data.tipoAgua,
+      name: "typeOfWater",
+      value: data.typeOfWater,
     },
   ];
 
@@ -240,6 +402,18 @@ function CrearParametro() {
 
     {
       label: "Piscina",
+    },
+  ];
+
+  const listaEspecificaciones = [
+    {
+      label: "Rango",
+    },
+    {
+      label: "Valor maximo",
+    },
+    {
+      label: "Analisis y reporte",
     },
   ];
 
@@ -276,7 +450,7 @@ function CrearParametro() {
             <Box sx={{ ...styles.vistaFormulario }}>
               <Box sx={{ ...styles.titulo }}>Informacion geenral</Box>
               <Grid container>
-                {InfoGeneral.map((elemento) =>
+                {InfoGeneral.map((elemento, index) =>
                   elemento.typo === "text" ? (
                     <Grid item xs={12} sm={12} md={4} key={elemento.nombre}>
                       <InputGeneral
@@ -304,29 +478,142 @@ function CrearParametro() {
                     marginLeft: "0px",
                   }}
                 >
-                  {data.parametros.map((elemento) => (
-                    <Grid container>
-                      <Grid item xs={12} sm={12} md={4}>
+                  {data.parameter.map((elemento, index) => (
+                    <Grid container key={index}>
+                      <Grid item xs={12}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <IconButton onClick={() => quitar(index)}>
+                            <Delete></Delete>
+                          </IconButton>
+                          <IconButton onClick={agregar}>
+                            <Add></Add>
+                          </IconButton>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={6}>
                         <InputGeneral
                           icon={<Pool></Pool>}
                           label="Parámetro"
-                        ></InputGeneral>
+                          value={elemento.parameter}
+                          name="name"
+                          onChange={(e) =>
+                            catchDataParametros(
+                              index,
+                              e.target.name,
+                              e.target.value
+                            )
+                          }
+                        />
                       </Grid>
-                      <Grid item xs={12} sm={12} md={4}>
+                      <Grid item xs={12} sm={12} md={6}>
                         <InputSelect
                           icon={<Pool></Pool>}
                           label="Especificación"
-                          options={[{ label: "no data" }]}
-                        ></InputSelect>
+                          options={listaEspecificaciones}
+                          onChange={(e) =>
+                            catchEspecificacion(e.target.textContent, index)
+                          }
+                        />
                       </Grid>
-                      <Grid item xs={12} sm={12} md={4}>
-                        <IconButton onClick={agregar}>
-                          <Add></Add>
-                        </IconButton>
-                      </Grid>
+                      {elemento.specification === "Rango" && (
+                        <>
+                          <Grid item xs={12} sm={6}>
+                            <InputGeneral
+                              type="number"
+                              name="minRange"
+                              icon={<Pool></Pool>}
+                              label="Min Range"
+                              value={elemento.minRange}
+                              onChange={(e) =>
+                                catchDataParametros(
+                                  index,
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <InputGeneral
+                              type="number"
+                              name="maxRange"
+                              icon={<Pool></Pool>}
+                              label="Max Range"
+                              value={elemento.maxRange}
+                              onChange={(e) =>
+                                catchDataParametros(
+                                  index,
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </Grid>
+                        </>
+                      )}
+                      {elemento.specification === "Valor maximo" && (
+                        <Grid item xs={12} sm={6}>
+                          <InputGeneral
+                            value={elemento.maximo}
+                            icon={<Pool></Pool>}
+                            label="Máximo"
+                            name="maxValueSpecification"
+                            // value={elemento.maximo}
+                            onChange={(e) =>
+                              catchDataParametros(
+                                index,
+                                e.target.name,
+                                e.target.value
+                              )
+                            }
+                          />
+                        </Grid>
+                      )}
+                      {elemento.specification === "Analisis y reporte" && (
+                        <Grid item xs={12} sm={6}>
+                          <InputGeneral
+                            value={elemento.maximo}
+                            icon={<Pool></Pool>}
+                            label="Análisis y reporte"
+                            name="analysisReport "
+                            // value={elemento.maximo}
+                            onChange={(e) =>
+                              catchDataParametros(
+                                index,
+                                e.target.name,
+                                e.target.value
+                              )
+                            }
+                          />
+                        </Grid>
+                      )}
                     </Grid>
                   ))}
                 </Box>
+                <Grid item xs={12}>
+                  <Button
+                    sx={{
+                      ...styles.guardar,
+                    }}
+                    onClick={crearNorma}
+                    variant="contained"
+                    disabled={deshabilitar}
+                  >
+                    {deshabilitar ? (
+                      <CircularProgress
+                        color="inherit"
+                        size={24}
+                      ></CircularProgress>
+                    ) : (
+                      "Guardar"
+                    )}
+                  </Button>
+                </Grid>
               </Grid>
             </Box>
           </Box>
@@ -339,8 +626,30 @@ function CrearParametro() {
               }
             ></Tabla>
           </Box>
+          {/* <Grid item xs={12}>
+            <Button
+              sx={{
+                ...styles.guardar,
+              }}
+              onClick={crearNorma}
+              variant="contained"
+              disabled={deshabilitar}
+            >
+              {deshabilitar ? (
+                <CircularProgress color="inherit" size={24}></CircularProgress>
+              ) : (
+                "Guardar"
+              )}
+            </Button>
+          </Grid> */}
         </Box>
       </Box>
+      <Alertas
+        open={open}
+        mensaje={mensaje}
+        severity={color}
+        cerrar={() => setOpen(false)}
+      ></Alertas>
     </Box>
   );
 }

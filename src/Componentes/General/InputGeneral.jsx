@@ -13,6 +13,7 @@ function InputGeneral({
   onChange,
   ref,
   value,
+  error,
 }) {
   const [see, setSee] = useState(false);
   const theme = createTheme({
@@ -39,6 +40,7 @@ function InputGeneral({
         </InputLabel>
         <TextField
           // disabled={estadoBoton}
+          error={error}
           value={value}
           ref={ref}
           onChange={onChange}

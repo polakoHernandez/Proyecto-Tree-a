@@ -18,6 +18,7 @@ import InputBuscar from "../../Componentes/General/InputBuscar";
 import Alertas from "../../Componentes/General/Alertas";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ClearIcon from "@mui/icons-material/Clear";
+import { Add, Delete, Poll, Pool } from "@mui/icons-material";
 
 function CrearPiscina() {
   //Referencia a inputs
@@ -42,171 +43,179 @@ function CrearPiscina() {
     forma: "RECTANGULAR",
     largo: 5,
     ancho: 6,
-    profundidad: 1.2,
-    profundidadB: 1.6,
-    profundidadC: 1.5,
+    // depth: {
+    //   depthA: 1.2,
+    //   depthB: 2,
+    //   depthC: 2.5,
+    // },
+
+    profundidad: "",
+    profundidadB: "",
+    profundidadC: "",
+
     operacion: "Recirculacion",
     caudal: 19,
     climatizado: "Si",
-    recirculacionMinimo: 29,
-    recirculacionMaximo: 19,
+    recirculacionMaximo: "",
+    recirculacionMinimo: "",
+
+    // recirculationPeriod: {
+    //   min: 29,
+    //   max: 30,
+    // },
+
     dosificacion: "Si",
-    filtro: "",
-    bomba: "",
-    calentador: "",
-    alturaFiltro: 19,
-    caudalBomba: 23,
-    marcaBomba: "Otra cosa",
-    referenciaBomba: "Nuveo",
-    referenciaCalentador: "jhkjhj",
-    marcaCalentador: "kh",
+    filtro: [
+      { filtro: "", altura: "", diametro: "", capacidad: "", lecho: "" },
+    ],
+    bomba: [{ flujo: "", referencia: "", marca: "", dataSheet: "", foto: "" }],
+    calentador: [{ referencia: "", marca: "", dataSheet: "" }],
     fotoPiscina: "",
-    fotoBomba: "",
-    fichaTecnica: "",
-    fichaTecnicaCalentador: "",
-    diametroFiltro: 23,
-    AlturaLechoFiltro: 90,
-    capacidadDelFiltro: 54,
   });
 
-  //*Estados para agergar los texfield de filtros
-  const [texfiedlList, setTexfiedlList] = useState([
-    {
-      filter: "",
-      filterHeight: "",
-      filterDiameter: "",
-      filterCapacity: "",
-      filterBedHeight: "",
-    },
-  ]);
+  //*Funcion para capturar los datos de los filtros
 
-  const addTexfiedl = () => {
-    setTexfiedlList((prevList) => [
-      ...prevList,
-      {
-        filter: "",
-        filterHeight: "",
-        filterDiameter: "",
-        filterCapacity: "",
-        filterBedHeight: "",
-      },
-    ]);
-  };
-
-  const handleInputChange = (index, name, value) => {
-    setTexfiedlList((prevList) => {
-      const newList = [...prevList];
-      newList[index][name] = value;
-      return newList;
-    });
-  };
-
-  const handleDelete = (index) => {
-    setTexfiedlList((prevList) => {
-      const newList = [...prevList];
-      newList.splice(index, 1); // Elimina el elemento en el índice especificado
-      return newList;
-    });
-  };
-
-  const handleSubmit = () => {
+  const agregarFiltros = () => {
     setData((prevData) => ({
       ...prevData,
       filtro: [
         ...prevData.filtro,
-        ...texfiedlList.map((element) => ({ ...element })),
+        { filtro: "", altura: "", diametro: "", capacidad: "", lecho: "" },
       ],
     }));
   };
 
+  const eliminarFiltro = (indice) => {
+    if (indice === 0) {
+      return;
+    }
+
+    setData((prevData) => ({
+      ...prevData,
+      filtro: prevData.filtro
+        .slice(0, indice)
+        .concat(prevData.filtro.slice(indice + 1)),
+    }));
+  };
+
+  const catchDataFiltros = (index, field, value) => {
+    setData((prevData) => {
+      const updatedFiltro = [...prevData.filtro];
+      updatedFiltro[index] = {
+        ...updatedFiltro[index],
+        [field]: value,
+      };
+
+      return {
+        ...prevData,
+        filtro: updatedFiltro,
+      };
+    });
+    console.log(data.filtro);
+  };
+
   //*Estados para agregar los texfield de Bomba
-  const [textFiedsBomba, setTextFieldsBomba] = useState([
-    {
-      pumpFlow: "",
-      referencePump: "",
-      pumpBrand: "",
-      dataSheetPump: "",
-      platePhoto: "",
-    },
-  ]);
-
-  const addTexfieldBomba = () => {
-    setTextFieldsBomba((prevList) => [
-      ...prevList,
-      {
-        pumpFlow: "",
-        referencePump: "",
-        filterHeight: "",
-        pumpBrand: "",
-        platePhoto: "",
-      },
-    ]);
-  };
-
-  const handleInputChangeBomba = (index, name, value) => {
-    setTextFieldsBomba((prevList) => {
-      const newList = [...prevList];
-      newList[index][name] = value;
-      return newList;
-    });
-  };
-
-  const handleDeleteBomba = (index) => {
-    setTextFieldsBomba((prevList) => {
-      const newList = [...prevList];
-      newList.splice(index, 1); // Elimina el elemento en el índice especificado
-      return newList;
-    });
-  };
-
-  const handleSubmitBomba = () => {
+  const agregarBombas = () => {
     setData((prevData) => ({
       ...prevData,
       bomba: [
         ...prevData.bomba,
-        ...textFiedsBomba.map((element) => ({ ...element })),
+        { filtro: "", altura: "", diametro: "", capacidad: "", lecho: "" },
       ],
     }));
+  };
+
+  const eliminarBombas = (indice) => {
+    if (indice === 0) {
+      return;
+    }
+
+    setData((prevData) => ({
+      ...prevData,
+      bomba: prevData.bomba
+        .slice(0, indice)
+        .concat(prevData.bomba.slice(indice + 1)),
+    }));
+  };
+
+  const catchDataBombas = (index, e) => {
+    console.log(e.target.name, e.target.value);
+    setData((prevData) => {
+      const updatedFiltro = [...prevData.bomba];
+      updatedFiltro[index] = {
+        ...updatedFiltro[index],
+        [e.target.name]: e.target.value,
+      };
+
+      return {
+        ...prevData,
+        bomba: updatedFiltro,
+      };
+    });
     console.log(data.bomba);
   };
 
+  const catchDataBombasFiles = (index, event) => {
+    const files = event.target.files;
+    const fieldName = event.target.name;
+
+    setData((prevData) => {
+      const newData = [...prevData.bomba];
+      newData[index][fieldName] = files[0];
+      return { ...prevData, bomba: newData };
+    });
+  };
+
   //*Estados para agregar texfiled para calentadores
-
-  const [textfiledCalentador, setTextFieldsClentaodr] = useState([
-    {
-      heaterReference: "",
-      heaterBrand: "",
-      dataSheetHeater: "",
-    },
-  ]);
-
-  const addTexfieldCalentaodr = () => {
-    setTextFieldsClentaodr((prevList) => [
-      ...prevList,
-      {
-        heaterReference: "",
-        heaterBrand: "",
-        dataSheetHeater: "",
-      },
-    ]);
+  const agregarCalentadores = () => {
+    setData((prevData) => ({
+      ...prevData,
+      calentador: [
+        ...prevData.calentador,
+        { referencia: "", marca: "", dataSheet: "" },
+      ],
+    }));
   };
 
-  const handleInputChangeCalentaodr = (index, name, value) => {
-    setTextFieldsClentaodr((prevList) => {
-      const newList = [...prevList];
-      newList[index][name] = value;
-      return newList;
+  const eliminarCalentadores = (indice) => {
+    if (indice === 0) {
+      return;
+    }
+
+    setData((prevData) => ({
+      ...prevData,
+      calentador: prevData.calentador
+        .slice(0, indice)
+        .concat(prevData.calentador.slice(indice + 1)),
+    }));
+  };
+
+  const catchDataCalentadores = (index, e) => {
+    setData((prevData) => {
+      const updatedFiltro = [...prevData.calentador];
+      updatedFiltro[index] = {
+        ...updatedFiltro[index],
+        [e.target.name]: e.target.value,
+      };
+
+      return {
+        ...prevData,
+        calentador: updatedFiltro,
+      };
+    });
+    console.log(data.calentador);
+  };
+
+  const catchDataCalentadoresFiles = (index, event) => {
+    const files = event.target.files;
+    const fieldName = event.target.name;
+
+    setData((prevData) => {
+      const newData = [...prevData.calentador];
+      newData[index][fieldName] = files[0];
+      return { ...prevData, calentador: newData };
     });
   };
-
-  const handleDeleteCalentador = (index) => {
-    setTextFieldsClentaodr((prevList) => {
-      const newList = [...prevList];
-      newList.splice(index, 1); // Elimina el elemento en el índice especificado
-      return newList;
-    });
-  };
-
   //*Estado para guardar el id del departamento
   const [idDepartamento, setIdDepartamento] = useState("");
 
@@ -223,12 +232,6 @@ function CrearPiscina() {
   };
 
   //*Funcion para limpiar a data
-
-  const imprimir = () => {
-    // console.log(refGeneral.current.querySelector("input").value);
-    // refGeneral.current.querySelector("input").value = "";
-    console.log(refGeneral.current);
-  };
 
   const limpiar = (event) => {
     setData({
@@ -253,7 +256,9 @@ function CrearPiscina() {
       recirculacionMinimo: "",
       recirculacionMaximo: "",
       dosificacion: "",
-      filtro: "",
+      filtro: [
+        { filtro: "", lecho: "", altura: "", diametro: "", capacidad: "" },
+      ],
       alturaFiltro: "",
       cantidadFiltro: "",
       caudalBomba: "",
@@ -582,24 +587,6 @@ function CrearPiscina() {
     //   }
     // }
 
-    setData((prevData) => ({
-      ...prevData,
-      filtro: [
-        ...prevData.filtro,
-        ...texfiedlList.map((element) => ({ ...element })),
-      ],
-
-      bomba: [
-        ...prevData.bomba,
-        ...textFiedsBomba.map((element) => ({ ...element })),
-      ],
-
-      calentador: [
-        ...prevData.calentador,
-        ...textfiledCalentador.map((element) => ({ ...element })),
-      ],
-    }));
-
     console.log(data);
 
     setDeshabilitar(true);
@@ -616,74 +603,65 @@ function CrearPiscina() {
     formData.append("category", data.estructura);
 
     // Depth
-    formData.append("depth[0][depthA]", data.profundidad);
-    formData.append("depth[0][depthB]", data.profundidadB);
-    formData.append("depth[0][depthC]", data.profundidadC);
+    formData.append("depth[depthA]", data.profundidad);
+    formData.append("depth[depthB]", data.profundidadB);
+    formData.append("depth[depthC]", data.profundidadC);
+
+    formData.append("recirculationPeriod[min]", data.recirculacionMaximo);
+    formData.append("recirculationPeriod[max]", data.recirculacionMinimo);
 
     formData.append("form", data.forma);
 
     // Recirculation Period
-    formData.append("recirculationPeriod[0][min]", data.recirculacionMinimo);
-    formData.append("recirculationPeriod[0][max]", data.recirculacionMaximo);
+    // formData.append("recirculationPeriod[max]", data.recirculacionMaximo);
+    // formData.append("recirculationPeriod[min]", data.recirculacionMinimo);
+    // formData.append("recirculationPeriod[max]", data.recirculacionMaximo);
+    // console.log(formData.get("recirculationPeriod[min]"));
+    // console.log(formData.get("recirculationPeriod[max]"));
 
     formData.append("use", data.uso);
     formData.append("photo", data.fotoPiscina);
     formData.append("typePool", data.caracteristica);
     formData.append("temperature", data.temperatura);
-    formData.append("minDepth", 1996);
-    formData.append("maxDepth", 1996);
+    // formData.append("minDepth", 1996);
+    // formData.append("maxDepth", 1996);
     formData.append("typeInstallation", data.instalacion);
     formData.append("systemOperation", data.operacion); // todo usar ChangeOperator data?.property
     formData.append("airConditioned", data.climatizado);
     formData.append("caudal", data.caudal);
     formData.append("autoDosing", data.dosificacion);
 
+    // formData.append("depth[depthA]", data.depth.depthA);
+    // formData.append("depth[depthB]", data.depth.depthB);
+    // formData.append("depth[depthC]", data.depth.depthC);
+
+    // formData.append("recirculationPeriod[min]", data.recirculationPeriod.min);
+    // formData.append("recirculationPeriod[max]", data.recirculationPeriod.max);
+
     data.filtro.forEach((elemento, index) => {
-      formData.append(`filters[${index}][filter]`, elemento.filter);
-      formData.append(`filters[${index}][filterHeight]`, elemento.filterHeight);
-      formData.append(
-        `filters[${index}][filterDiameter]`,
-        elemento.filterDiameter
-      );
-      formData.append(
-        `filters[${index}][filterCapacity]`,
-        elemento.filterCapacity
-      );
-      formData.append(
-        `filters[${index}][filterBedHeight]`,
-        elemento.filterBedHeight
-      );
+      formData.append(`filters[${index}][filter]`, elemento.filtro);
+      formData.append(`filters[${index}][filterHeight]`, elemento.altura);
+      formData.append(`filters[${index}][filterDiameter]`, elemento.diametro);
+      formData.append(`filters[${index}][filterCapacity]`, elemento.capacidad);
+      formData.append(`filters[${index}][filterBedHeight]`, elemento.lecho);
     });
 
     data.bomba.forEach((elemento, index) => {
-      formData.append(`pumps[${index}][pumpFlow]`, elemento.pumpFlow);
-      formData.append(`pumps[${index}][referencePump]`, elemento.referencePump);
-      formData.append(`pumps[${index}][pumpBrand]`, elemento.pumpBrand);
-      formData.append(`pumps[${index}][dataSheetPump]`, elemento.dataSheetPump);
-      formData.append(`pumps[${index}][platePhoto]`, elemento.platePhoto);
+      formData.append(`pumps[${index}][pumpFlow]`, elemento.flujo);
+      formData.append(`pumps[${index}][referencePump]`, elemento.referencia);
+      formData.append(`pumps[${index}][pumpBrand]`, elemento.marca);
+      formData.append(`pumps[${index}][dataSheetPump]`, elemento.dataSheet);
+      formData.append(`pumps[${index}][platePhoto]`, elemento.foto);
     });
 
     data.calentador.forEach((elemento, index) => {
       formData.append(
         `heaters[${index}][heaterReference]`,
-        elemento.heaterReference
+        elemento.referencia
       );
-      formData.append(`heaters[${index}][heaterBrand]`, elemento.heaterBrand);
-      formData.append(
-        `heaters[${index}][dataSheetHeater]`,
-        elemento.dataSheetHeater
-      );
+      formData.append(`heaters[${index}][heaterBrand]`, elemento.marca);
+      formData.append(`heaters[${index}][dataSheetHeater]`, elemento.dataSheet);
     });
-
-    // formData.append(
-    //   "filters",
-    //   data.filtro.forEach((element) => {
-    //     element;
-    //   })
-    // ); // todo data.filters.filter
-    // formData.append("filters[filterHeight]", data.filtro.filterHeight); // todo data.filters.filter
-    // formData.append("filters[filterDiameter]", data.filtro.filterDiameter); // todo data.filters.filter
-    // formData.append("filters[filterCapacity]", data.filtro.filterCapacity); // todo data.filters.filter
 
     try {
       const response = await fetch(
@@ -693,12 +671,13 @@ function CrearPiscina() {
           headers: {
             Accept: "application/json",
             "x-token": localStorage.getItem("clave"),
+            // "content-type": "application/json",
           },
           body: formData,
         }
       );
 
-      console.log(response.status);
+      console.log({ dedub: response });
 
       switch (response.status) {
         case 200:
@@ -707,34 +686,24 @@ function CrearPiscina() {
           setOpen(true);
           setMensaje("Piscina Creada exitosamente!");
           setColor("success");
-          limpiar();
           setDeshabilitar(false);
 
           break;
 
         case 400:
-          console.log(result);
+          console.log(await response.json());
           setOpen(true);
           setMensaje("Todos los campos son obligatorios");
           setColor("error");
           setDeshabilitar(false);
 
           break;
-
-        default:
-          setDeshabilitar(false);
-
-          break;
       }
     } catch (error) {
-      setOpen(true);
-      setMensaje("Error en el servidor");
-      setColor("error");
       console.log(error);
-      setDeshabilitar(false);
     }
-    setDeshabilitar(false);
   };
+
   useEffect(() => {
     listarDepartamentos();
     console.log(data.fotoPiscina);
@@ -1175,117 +1144,99 @@ function CrearPiscina() {
                 <Typography sx={styles.encabezadosEqupios}>
                   Sección de filtros
                 </Typography>
-                <Grid container>
-                  <Grid container xs={12}>
-                    <Grid
-                      item
-                      xs={12}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "end",
-                        // backgroundColor: "beige",
-                      }}
-                    >
-                      <IconButton
-                        className="button"
-                        onClick={addTexfiedl}
-                        sx={{
-                          color: "green",
-                          border: "1px solid green",
-                          borderRadius: "0px",
-                          marginRight: "2%",
-                        }}
-                      >
-                        <AddCircleIcon></AddCircleIcon>
-                      </IconButton>
-                    </Grid>
-                    {texfiedlList.map((element, index) => (
+                <Grid container xs={12}>
+                  <Grid item xs={12}>
+                    {data.filtro.map((elemento, index) => (
                       <Grid container key={index}>
                         <Grid xs={12}>
-                          <IconButton
-                            className="button-delete"
-                            onClick={() => handleDelete(index)}
+                          <Box
                             sx={{
-                              color: "red",
-                              border: "1px solid red",
-                              borderRadius: "0px",
-                              marginTop: "15px",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
                             }}
                           >
-                            <ClearIcon></ClearIcon>
-                          </IconButton>
+                            <IconButton onClick={agregarFiltros}>
+                              <Add></Add>
+                            </IconButton>
+                            <IconButton onClick={() => eliminarFiltro(index)}>
+                              <Delete></Delete>
+                            </IconButton>
+                          </Box>
                         </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputGeneral
-                            icon={<PoolIcon></PoolIcon>}
-                            label="Filtro"
+                        <Grid xs={12} sm={12} md={4}>
+                          <InputSelect
                             onChange={(e) =>
-                              handleInputChange(index, "filter", e.target.value)
-                            }
-                            value={element.InputUno}
-                          />
-                        </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputGeneral
-                            icon={<PoolIcon></PoolIcon>}
-                            label="Altura dle filtro"
-                            onChange={(e) =>
-                              handleInputChange(
+                              catchDataFiltros(
                                 index,
-                                "filterHeight",
+                                "filtro",
+                                e.target.textContent
+                              )
+                            }
+                            name="filtro"
+                            icon={<Pool></Pool>}
+                            label="filtro"
+                            options={filtros}
+                          ></InputSelect>
+                        </Grid>
+                        <Grid xs={12} sm={12} md={4}>
+                          <InputGeneral
+                            type="number"
+                            name="altura"
+                            label="Altura"
+                            icon={<Pool></Pool>}
+                            onChange={(e) =>
+                              catchDataFiltros(index, "altura", e.target.value)
+                            }
+                          ></InputGeneral>
+                        </Grid>
+                        <Grid xs={12} sm={12} md={4}>
+                          <InputGeneral
+                            onChange={(e) =>
+                              catchDataFiltros(
+                                index,
+                                e.target.name,
                                 e.target.value
                               )
                             }
-                            value={element.InputDos}
-                          />
+                            type="number"
+                            name="diametro"
+                            label="Diametro"
+                            icon={<Pool></Pool>}
+                          ></InputGeneral>
                         </Grid>
-                        <Grid xs={4} sm={12} md={4}>
+                        <Grid xs={12} sm={12} md={4}>
                           <InputGeneral
-                            icon={<PoolIcon></PoolIcon>}
-                            label="Diametro del filtro"
                             onChange={(e) =>
-                              handleInputChange(
+                              catchDataFiltros(
                                 index,
-                                "filterDiameter",
+                                e.target.name,
                                 e.target.value
                               )
                             }
-                            value={element.InputTres}
-                          />
+                            type="number"
+                            name="capacidad"
+                            label="Capacidad"
+                            icon={<Pool></Pool>}
+                          ></InputGeneral>
                         </Grid>
-                        <Grid xs={4} sm={12} md={4}>
+                        <Grid xs={12} sm={12} md={4}>
                           <InputGeneral
-                            icon={<PoolIcon></PoolIcon>}
-                            label="Capacidad del filtro"
                             onChange={(e) =>
-                              handleInputChange(
+                              catchDataFiltros(
                                 index,
-                                "filterCapacity",
+                                e.target.name,
                                 e.target.value
                               )
                             }
-                            value={element.InputCuatro}
-                          />
-                        </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputGeneral
-                            icon={<PoolIcon></PoolIcon>}
-                            label="Altura de la cama del filtro"
-                            onChange={(e) =>
-                              handleInputChange(
-                                index,
-                                "filterBedHeight",
-                                e.target.value
-                              )
-                            }
-                            value={element.InputCinco}
-                          />
+                            type="number"
+                            name="lecho"
+                            label="Altura de lecho filtrante"
+                            icon={<Pool></Pool>}
+                          ></InputGeneral>
                         </Grid>
                       </Grid>
                     ))}
-                    <button className="button" onClick={handleSubmit}>
-                      Mostrar
-                    </button>
                   </Grid>
                 </Grid>
 
@@ -1295,203 +1246,74 @@ function CrearPiscina() {
                 </Typography>
                 <Grid container>
                   <Grid container xs={12}>
-                    <Grid
-                      item
-                      xs={12}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "end",
-                        // backgroundColor: "beige",
-                      }}
-                    >
-                      <IconButton
-                        className="button"
-                        onClick={addTexfieldBomba}
-                        sx={{
-                          color: "green",
-                          border: "1px solid green",
-                          borderRadius: "0px",
-                          marginRight: "2%",
-                        }}
-                      >
-                        <AddCircleIcon></AddCircleIcon>
-                      </IconButton>
+                    <Grid item xs={12} sx={{}}>
+                      {data.bomba.map((elemento, index) => (
+                        <Grid container key={index}>
+                          <Grid xs={12}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                              }}
+                            >
+                              <IconButton onClick={agregarBombas}>
+                                <Add></Add>
+                              </IconButton>
+                              <IconButton onClick={() => eliminarBombas(index)}>
+                                <Delete></Delete>
+                              </IconButton>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={4}>
+                            <InputGeneral
+                              type="number"
+                              label="Flujo"
+                              name="flujo"
+                              icon={<Pool></Pool>}
+                              onChange={(e) => catchDataBombas(index, e)}
+                            ></InputGeneral>
+                          </Grid>
+
+                          <Grid item xs={12} sm={12} md={4}>
+                            <InputGeneral
+                              label="Referencia"
+                              name="referencia"
+                              icon={<Pool></Pool>}
+                              onChange={(e) => catchDataBombas(index, e)}
+                            ></InputGeneral>
+                          </Grid>
+
+                          <Grid item xs={12} sm={12} md={4}>
+                            <InputGeneral
+                              label="Marca"
+                              name="marca"
+                              icon={<Pool></Pool>}
+                              onChange={(e) => catchDataBombas(index, e)}
+                            ></InputGeneral>
+                          </Grid>
+
+                          <Grid item xs={12} sm={12} md={4}>
+                            <InputBuscar
+                              label="Datasheet"
+                              name="dataSheet"
+                              icon={<Pool></Pool>}
+                              onChange={(e) => catchDataBombasFiles(index, e)}
+                            ></InputBuscar>
+                          </Grid>
+
+                          <Grid item xs={12} sm={12} md={4}>
+                            <InputBuscar
+                              label="Foto"
+                              name="foto"
+                              icon={<Pool></Pool>}
+                              onChange={(e) => catchDataBombasFiles(index, e)}
+                            ></InputBuscar>
+                          </Grid>
+                        </Grid>
+                      ))}
                     </Grid>
-                    {textFiedsBomba.map((element, index) => (
-                      <Grid container key={index}>
-                        <Grid xs={12}>
-                          <IconButton
-                            className="button-delete"
-                            onClick={() => handleDeleteBomba(index)}
-                            sx={{
-                              color: "red",
-                              border: "1px solid red",
-                              borderRadius: "0px",
-                              marginTop: "15px",
-                            }}
-                          >
-                            <ClearIcon></ClearIcon>
-                          </IconButton>
-                        </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputGeneral
-                            icon={<PoolIcon></PoolIcon>}
-                            label="pumpFlow"
-                            onChange={(e) =>
-                              handleInputChangeBomba(
-                                index,
-                                "pumpFlow",
-                                e.target.value
-                              )
-                            }
-                            value={element.InputUno}
-                          />
-                        </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputGeneral
-                            icon={<PoolIcon></PoolIcon>}
-                            label="referencePump"
-                            onChange={(e) =>
-                              handleInputChangeBomba(
-                                index,
-                                "referencePump",
-                                e.target.value
-                              )
-                            }
-                            value={element.InputDos}
-                          />
-                        </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputGeneral
-                            icon={<PoolIcon></PoolIcon>}
-                            label="pumpBrand"
-                            onChange={(e) =>
-                              handleInputChangeBomba(
-                                index,
-                                "pumpBrand",
-                                e.target.value
-                              )
-                            }
-                            value={element.InputTres}
-                          />
-                        </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputBuscar
-                            icon={<PoolIcon></PoolIcon>}
-                            label="dataSheetPump"
-                            onChange={(e) =>
-                              handleInputChangeBomba(
-                                index,
-                                "dataSheetPump",
-                                e.target.files[0]
-                              )
-                            }
-                            value={element.InputCuatro}
-                          />
-                        </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputBuscar
-                            type="file"
-                            icon={<PoolIcon></PoolIcon>}
-                            label="platePhoto"
-                            onChange={(e) =>
-                              handleInputChangeBomba(
-                                index,
-                                "platePhoto",
-                                e.target.files[0]
-                              )
-                            }
-                            value={element.InputCinco}
-                          />
-                        </Grid>
-                      </Grid>
-                    ))}
-                    <button className="button" onClick={handleSubmitBomba}>
-                      Mostrar
-                    </button>
                   </Grid>
-
-                  {/* polako */}
-                  {/* <Grid item xs={12} sm={12} md={4}>
-                    <InputGeneral
-                      value={data.caudalBomba}
-                      type="number"
-                      label="Caudal de bomda"
-                      placeholder="Ingrese el caudal de la bomba"
-                      icon={<PoolIcon></PoolIcon>}
-                      onChange={(e) =>
-                        seleccionarData("caudalBomba", e.target.value)
-                      }
-                    ></InputGeneral>
-                  </Grid>
-
-                  <Grid item xs={12} sm={12} md={4}>
-                    <InputGeneral
-                      value={data.marcaBomba}
-                      label="Marca de bomda"
-                      placeholder="Ingrese la marca de la bomba"
-                      icon={<PoolIcon></PoolIcon>}
-                      onChange={(e) =>
-                        seleccionarData("marcaBomba", e.target.value)
-                      }
-                    ></InputGeneral>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={4}>
-                    <InputGeneral
-                      value={data.referenciaBomba}
-                      label="Referencia de bomda"
-                      placeholder="Ingrese la Referncia de la bomba"
-                      icon={<PoolIcon></PoolIcon>}
-                      onChange={(e) =>
-                        seleccionarData("referenciaBomba", e.target.value)
-                      }
-                    ></InputGeneral>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={4}
-                    sx={{
-                      height: "90px",
-                      // backgroundColor: "red",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      paddingLeft: "15px",
-                      overflow: "scroll",
-                    }}
-                  >
-                    <InputBuscar
-                      label="Foto placa bomba"
-                      onChange={(e) =>
-                        seleccionarData("fotoBomba", e.target.files[0])
-                      }
-                    ></InputBuscar>
-                  </Grid>
-
-                  <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={4}
-                    sx={{
-                      height: "90px",
-                      // backgroundColor: "red",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      paddingLeft: "15px",
-                      overflow: "scroll",
-                    }}
-                  >
-                    <InputBuscar
-                      label="Ficha Tecnica"
-                      onChange={(e) =>
-                        seleccionarData("fichaTecnica", e.target.files[0])
-                      }
-                    ></InputBuscar>
-                  </Grid> */}
                 </Grid>
 
                 {/* Seccion Calentador */}
@@ -1500,91 +1322,56 @@ function CrearPiscina() {
                 </Typography>
                 <Grid container>
                   <Grid container xs={12}>
-                    <Grid
-                      item
-                      xs={12}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "end",
-                        // backgroundColor: "beige",
-                      }}
-                    >
-                      <IconButton
-                        className="button"
-                        onClick={addTexfieldCalentaodr}
-                        sx={{
-                          color: "green",
-                          border: "1px solid green",
-                          borderRadius: "0px",
-                          marginRight: "2%",
-                        }}
-                      >
-                        <AddCircleIcon></AddCircleIcon>
-                      </IconButton>
+                    <Grid item xs={12} sx={{}}>
+                      {data.calentador.map((elemeto, index) => (
+                        <Grid container key={index}>
+                          <Grid xs={12}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                              }}
+                            >
+                              <IconButton onClick={agregarCalentadores}>
+                                <Add></Add>
+                              </IconButton>
+                              <IconButton
+                                onClick={() => eliminarCalentadores(index)}
+                              >
+                                <Delete></Delete>
+                              </IconButton>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={4}>
+                            <InputGeneral
+                              label="Referencia"
+                              name="referencia"
+                              icon={<Pool></Pool>}
+                              onChange={(e) => catchDataCalentadores(index, e)}
+                            ></InputGeneral>
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={4}>
+                            <InputGeneral
+                              label="Marca"
+                              name="marca"
+                              icon={<Pool></Pool>}
+                              onChange={(e) => catchDataCalentadores(index, e)}
+                            ></InputGeneral>
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={4}>
+                            <InputBuscar
+                              label="DataSheet"
+                              name="dataSheet"
+                              icon={<Pool></Pool>}
+                              onChange={(e) =>
+                                catchDataCalentadoresFiles(index, e)
+                              }
+                            ></InputBuscar>
+                          </Grid>
+                        </Grid>
+                      ))}
                     </Grid>
-                    {textfiledCalentador.map((element, index) => (
-                      <Grid container key={index}>
-                        <Grid xs={12}>
-                          <IconButton
-                            className="button-delete"
-                            onClick={() => handleDeleteCalentador(index)}
-                            sx={{
-                              color: "red",
-                              border: "1px solid red",
-                              borderRadius: "0px",
-                              marginTop: "15px",
-                            }}
-                          >
-                            <ClearIcon></ClearIcon>
-                          </IconButton>
-                        </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputGeneral
-                            icon={<PoolIcon></PoolIcon>}
-                            label="heaterReference"
-                            onChange={(e) =>
-                              handleInputChangeCalentaodr(
-                                index,
-                                "heaterReference",
-                                e.target.value
-                              )
-                            }
-                            value={element.InputUno}
-                          />
-                        </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputGeneral
-                            icon={<PoolIcon></PoolIcon>}
-                            label="heaterBrand"
-                            onChange={(e) =>
-                              handleInputChangeCalentaodr(
-                                index,
-                                "heaterBrand",
-                                e.target.value
-                              )
-                            }
-                            value={element.InputDos}
-                          />
-                        </Grid>
-                        <Grid xs={4} sm={12} md={4}>
-                          <InputBuscar
-                            icon={<PoolIcon></PoolIcon>}
-                            label="dataSheetHeater"
-                            onChange={(e) =>
-                              handleInputChangeCalentaodr(
-                                index,
-                                "dataSheetHeater",
-                                e.target.files[0]
-                              )
-                            }
-                            value={element.InputTres}
-                          />
-                        </Grid>
-                      </Grid>
-                    ))}
-                    <button className="button" onClick={handleSubmitBomba}>
-                      Mostrar
-                    </button>
                   </Grid>
                 </Grid>
                 <Grid xs={12}>

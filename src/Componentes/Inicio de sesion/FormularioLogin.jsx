@@ -97,6 +97,8 @@ function FormularioLogin({ estilo }) {
           setCargando(false);
           localStorage.setItem("clave", token);
           localStorage.setItem("user", user.name);
+          localStorage.setItem("id", user._id);
+          localStorage.setItem("rol", user.role);
           // console.log(responseData);
           navigate(`/principal?data=${responseData}`, {
             state: {

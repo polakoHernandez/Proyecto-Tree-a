@@ -577,6 +577,36 @@ function CrearPiscina() {
     }
   };
 
+  const crearNotificacion = async (id) => {
+    try {
+      const response = await fetch(
+        "https://treea-piscinas-api.vercel.app/v1/notify-manager",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "x-token": localStorage.getItem("clave"),
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            poolId: id,
+            userId: localStorage.getItem("id"),
+          }),
+        }
+      );
+
+      switch (response.status) {
+        case 200:
+          const respuesta = await response.json();
+          console.log(respuesta);
+
+          break;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const crearPiscina = async () => {
     // for (const key in data) {
     //   if (data.hasOwnProperty(key) && data[key] === "") {
@@ -682,10 +712,14 @@ function CrearPiscina() {
       switch (response.status) {
         case 200:
           const result = await response.json();
-          console.log(result);
+          console.log(result._id);
+          const idPool = result._id;
           setOpen(true);
           setMensaje("Piscina Creada exitosamente!");
           setColor("success");
+
+          crearNotificacion(idPool);
+
           setDeshabilitar(false);
 
           break;

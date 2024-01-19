@@ -210,6 +210,36 @@ const CrearQuimico = () => {
     "expirationDate",
   ];
 
+  const crearNotificacion = async (id) => {
+    try {
+      const response = await fetch(
+        "https://treea-piscinas-api.vercel.app/v1/notify-manager",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "x-token": localStorage.getItem("clave"),
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            chemicalProductId: id,
+            userId: localStorage.getItem("id"),
+          }),
+        }
+      );
+
+      switch (response.status) {
+        case 200:
+          const respuesta = await response.json();
+          console.log(respuesta);
+
+          break;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const crearFormulario = () => {
     const formData = new FormData();
     formData.append("name", data.nombre);
@@ -248,7 +278,13 @@ const CrearQuimico = () => {
 
     switch (response.status) {
       case 200:
-        console.log(await response.json());
+        const respuesta = await response.json();
+        console.log(respuesta);
+
+        if (respuesta.minQuantity > respuesta.availableQuantity) {
+          crearNotificacion(respuesta._id);
+        }
+
         setHabilitar(false);
         break;
 

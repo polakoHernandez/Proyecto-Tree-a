@@ -14,6 +14,7 @@ import InputSelect from "../../Componentes/General/InputSelect";
 import Tabla from "../../Componentes/Parametros/Tabla";
 import { Pool, Add, Delete } from "@mui/icons-material";
 import { json } from "react-router-dom";
+import TablaPrevisualizacion from "../../Componentes/Parametros/TablaPrevisualizacion";
 
 function CrearParametro() {
   //* Estado para guardar la data de info general
@@ -644,6 +645,13 @@ function CrearParametro() {
                   : listaParametros.normativities
               }
             ></Tabla>
+          </Box>
+          <Box>
+            <Box>
+              <TablaPrevisualizacion
+                data={data.parameter}
+              ></TablaPrevisualizacion>
+            </Box>
           </Box>
         </Box>
       </Box>

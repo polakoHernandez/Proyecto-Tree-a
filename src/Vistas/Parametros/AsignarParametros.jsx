@@ -8,20 +8,17 @@ import {
   IconButton,
   Button,
   CircularProgress,
+  TextField,
+  Autocomplete,
 } from "@mui/material";
 import InputGeneral from "../../Componentes/General/InputGeneral";
 import InputSelect from "../../Componentes/General/InputSelect";
 import Tabla from "../../Componentes/Parametros/Tabla";
 import { Pool, Add, Delete } from "@mui/icons-material";
-import { useLocation } from "react-router-dom";
-function EditarNorma() {
-  const location = useLocation();
-  const id = new URLSearchParams(location.search).get("Id");
+import TablaPrevisualizacion from "../../Componentes/Parametros/TablaPrevisualizacion";
 
-  //* estado para cargar la vista
-  const [mostrarVista, setMostrarVista] = useState(false);
-
-  //* Estado para guardar la data de info general
+function AsignarParametros() {
+  //* Estado para guardar la data de los inuts cambiantes
   const [data, setData] = useState({
     nameNormativity: "",
     description: "",
@@ -33,10 +30,221 @@ function EditarNorma() {
   const [open, setOpen] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [color, setColor] = useState("");
+  const [listaNormas, setListaNormas] = useState([]);
+  const [listaPiscinas, setListaPiscinas] = useState([]);
+  const [idNorma, setIdNorma] = useState("");
+  const [optionsPiscinas, setOptionsPiscinas] = useState([]);
+  const [valuPisicna, setValuPisicna] = useState([]);
 
   //*Estao para renderizar el front
   const [reload, setReload] = useState(false);
 
+  //* Estado ara guradar lo parametros
+  const [listaParametros, setLisaParametros] = useState([]);
+
+  //*funcion para listar los parametros
+  const listarParametros = async () => {
+    const respuesta = await fetch(
+      "https://treea-piscinas-api.vercel.app/v1/normativities",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "x-token": localStorage.getItem("clave"),
+        },
+      }
+    );
+
+    switch (respuesta.status) {
+      case 200:
+        const response = await respuesta.json();
+        setLisaParametros(response);
+        console.log(response.normativities);
+
+        const newArray = response.normativities.map((elemento) => ({
+          label: elemento.nameNormativity,
+        }));
+        setListaNormas(newArray);
+
+        break;
+
+      case 401:
+        console.log(await respuesta.json());
+        break;
+
+      case 500:
+        console.log(await respuesta.json());
+        break;
+    }
+  };
+
+  //*Funcion para listar Piscinas
+  const listarPiscinas = async () => {
+    const respuesta = await fetch(
+      "https://treea-piscinas-api.vercel.app/v1/pools",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "x-token": localStorage.getItem("clave"),
+        },
+      }
+    );
+
+    switch (respuesta.status) {
+      case 200:
+        const response = await respuesta.json();
+        setListaPiscinas(response.pools);
+        console.log(response.pools);
+
+        const newArray = response.pools.map((elemento) => ({
+          label: elemento.name,
+        }));
+
+        setOptionsPiscinas(newArray);
+
+        // response.pools.forEach((element) => {
+        //   setListaPiscinas((prevData) => [
+        //     ...prevData,
+        //     { label: element.name },
+        //   ]);
+        // });
+
+        break;
+
+      case 401:
+        console.log(await respuesta.json());
+        break;
+
+      case 500:
+        console.log(await respuesta.json());
+        break;
+    }
+  };
+
+  //*Funcion para obtener idNorma
+  const obtenerIdNorma = (norma) => {
+    const retonro = listaParametros.normativities.find(
+      (element) => element.nameNormativity == norma
+    );
+    setIdNorma(retonro);
+  };
+
+  const obtenerIdPiscina = (piscina) => {
+    const retorno = listaPiscinas.find((elemento) => elemento.name === piscina);
+    setValuPisicna(retorno._id);
+  };
+
+  const asignarNorma = async () => {
+    setDeshabilitar(true);
+
+    const response = await fetch(
+      "https://treea-piscinas-api.vercel.app/v1/parameterization",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "x-token": localStorage.getItem("clave"),
+          "Content-Type": "application/json", // Añadido Content-Type
+        },
+        body: JSON.stringify({
+          typeValidation: "Norma",
+          normativityId: idNorma,
+          poolId: valuPisicna,
+        }),
+      }
+    );
+
+    switch (response.status) {
+      case 200:
+        const result = await response.json();
+        console.log(result);
+        setOpen(true);
+        setMensaje("Norma Asignada exitosamente!");
+        setColor("success");
+        setDeshabilitar(false);
+
+        break;
+
+      case 400:
+        console.log(await response.json());
+        setOpen(true);
+        setMensaje("Todos los campos son obligatorios");
+        setColor("error");
+        setDeshabilitar(false);
+
+        break;
+
+      case 401:
+        console.log(await response.json());
+        setOpen(true);
+        setMensaje("Token no valido");
+        setColor("error");
+        setDeshabilitar(false);
+
+        break;
+    }
+
+    try {
+    } catch (error) {
+      console.log(error);
+      setOpen(true);
+      setMensaje("Error en el servidor");
+      setColor("error");
+      setDeshabilitar(false);
+    }
+  };
+
+  //*ontaodor para mostrar las vistas
+  const [contador, setContador] = useState(1);
+
+  const [mover, setMover] = useState(false); //MOvercon Piscina
+  const [moverUsuario, setMoverUsuarios] = useState(false);
+  const [moverParametros, setMoverParametros] = useState(false);
+  const [moverQuimicos, setMoverQuimicos] = useState(false);
+  const [moverPerfil, setMoverPerfil] = useState(false);
+
+  const moverTabla = () => {
+    setMover(!mover);
+    setMoverUsuarios(false);
+    setMoverParametros(false);
+    setMoverQuimicos(false);
+    setMoverPerfil(false);
+  };
+
+  const moverTablaUsuarios = () => {
+    setMover(false);
+    setMoverUsuarios(!moverUsuario);
+    setMoverParametros(false);
+    setMoverQuimicos(false);
+    setMoverPerfil(false);
+  };
+
+  const moverTablaParametros = () => {
+    setMover(false);
+    setMoverUsuarios(false);
+    setMoverParametros(!moverParametros); //
+    setMoverQuimicos(false);
+    setMoverPerfil(false);
+  };
+
+  const moverTablaQuimicos = () => {
+    setMover(false);
+    setMoverUsuarios(false);
+    setMoverParametros(false);
+    setMoverQuimicos(!moverQuimicos);
+    setMoverPerfil(false);
+  };
+
+  const moverTablaPerfil = () => {
+    setMover(false);
+    setMoverUsuarios(false);
+    setMoverParametros(false);
+    setMoverQuimicos(false);
+    setMoverPerfil(!moverPerfil);
+  };
+
+  //*Seccion para los parametro cambiantes
   const catchEspecificacion = (value, index) => {
     const newData = { ...data };
     newData.parameter[index].specification = value;
@@ -79,7 +287,6 @@ function EditarNorma() {
     console.log(data);
   };
 
-  //*Funciones ara capturar la data de inforGeneral
   const catchData = (e) => {
     setData((prevData) => ({
       ...prevData,
@@ -132,305 +339,6 @@ function EditarNorma() {
     });
   };
 
-  //* Estado ara guradar lo parametros
-  const [listaParametros, setLisaParametros] = useState([]);
-
-  //*Funcion para renderizar el front
-  const handleReloadData = () => {
-    // Set reload flag to true to trigger data reload in DataGridDemo
-    setReload(true);
-  };
-
-  //*Funcion para listar norma por Id
-  const listarNormaId = async (id) => {
-    try {
-      const tokenSend = localStorage.getItem("clave");
-      const response = await fetch(
-        `https://pool-api-treea.vercel.app/v1/normativity/${id}`,
-        {
-          method: "GET",
-          headers: {
-            Accpet: "Application/json",
-            "x-token": tokenSend,
-          },
-        }
-      );
-
-      switch (response.status) {
-        case 401:
-          setOpenModal(true);
-          break;
-
-        case 200:
-          const normaRetornada = await response.json();
-          console.log(normaRetornada.normativityId);
-          setData(normaRetornada.normativityId);
-          setMostrarVista(true); // Muestra la vista al cargar los datos
-
-          break;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  //*funcion para listar los parametros
-  const listarParametros = async () => {
-    const respuesta = await fetch(
-      "https://treea-piscinas-api.vercel.app/v1/normativities",
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "x-token": localStorage.getItem("clave"),
-        },
-      }
-    );
-
-    switch (respuesta.status) {
-      case 200:
-        const response = await respuesta.json();
-        setLisaParametros(response);
-        console.log(response);
-        break;
-
-      case 401:
-        console.log(await respuesta.json());
-        break;
-
-      case 500:
-        console.log(await respuesta.json());
-        break;
-    }
-  };
-
-  const crearNorma = async (id) => {
-    setDeshabilitar(true);
-
-    // alert(JSON.stringify(data));
-
-    const response = await fetch(
-      `https://treea-piscinas-api.vercel.app/v1/normativity/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "x-token": localStorage.getItem("clave"),
-          "Content-Type": "application/json", // Añadido Content-Type
-        },
-        body: JSON.stringify({
-          nameNormativity: data.nameNormativity,
-          description: data.description,
-          typeOfWater: data.typeOfWater,
-          parameter: data.parameter,
-        }),
-      }
-    );
-
-    switch (response.status) {
-      case 200:
-        const result = await response.json();
-        console.log(result);
-        setOpen(true);
-        setMensaje("Norma actualizada exitosamente!");
-        setColor("success");
-        setDeshabilitar(false);
-
-        break;
-
-      case 400:
-        console.log(await response.json());
-        setOpen(true);
-        setMensaje("Todos los campos son obligatorios");
-        setColor("error");
-        setDeshabilitar(false);
-
-        break;
-
-      case 401:
-        console.log(await response.json());
-        setOpen(true);
-        setMensaje("Token no valido");
-        setColor("error");
-        setDeshabilitar(false);
-
-        break;
-
-      case 404:
-        console.log(await response.json());
-        setOpen(true);
-        setMensaje("Id de la norma no fue encontrado!");
-        setColor("error");
-        setDeshabilitar(false);
-
-        break;
-    }
-
-    try {
-    } catch (error) {
-      console.log(error);
-      setOpen(true);
-      setMensaje("Error en el servidor");
-      setColor("error");
-      setDeshabilitar(false);
-    }
-    setDeshabilitar(false);
-  };
-  //*ontaodor para mostrar las vistas
-  const [contador, setContador] = useState(1);
-
-  const [mover, setMover] = useState(false); //MOvercon Piscina
-  const [moverUsuario, setMoverUsuarios] = useState(false);
-  const [moverParametros, setMoverParametros] = useState(false);
-  const [moverQuimicos, setMoverQuimicos] = useState(false);
-  const [moverPerfil, setMoverPerfil] = useState(false);
-
-  const moverTabla = () => {
-    setMover(!mover);
-    setMoverUsuarios(false);
-    setMoverParametros(false);
-    setMoverQuimicos(false);
-    setMoverPerfil(false);
-  };
-
-  const moverTablaUsuarios = () => {
-    setMover(false);
-    setMoverUsuarios(!moverUsuario);
-    setMoverParametros(false);
-    setMoverQuimicos(false);
-    setMoverPerfil(false);
-  };
-
-  const moverTablaParametros = () => {
-    setMover(false);
-    setMoverUsuarios(false);
-    setMoverParametros(!moverParametros); //
-    setMoverQuimicos(false);
-    setMoverPerfil(false);
-  };
-
-  const moverTablaQuimicos = () => {
-    setMover(false);
-    setMoverUsuarios(false);
-    setMoverParametros(false);
-    setMoverQuimicos(!moverQuimicos);
-    setMoverPerfil(false);
-  };
-
-  const moverTablaPerfil = () => {
-    setMover(false);
-    setMoverUsuarios(false);
-    setMoverParametros(false);
-    setMoverQuimicos(false);
-    setMoverPerfil(!moverPerfil);
-  };
-
-  const styles = {
-    generalContainer: {
-      overflowX: "hidden",
-      height: "100vh",
-    },
-
-    mainBox: {
-      //! para cambiar el color backgroundColor: "pink",
-      height: "87%",
-      width: "90%",
-      marginTop: "10px",
-      marginLeft: "5%",
-      transition: "ease 0.3s",
-      transform:
-        mover || moverUsuario || moverParametros || moverQuimicos || moverPerfil
-          ? "translateY( 190px)"
-          : "translateY(0px)",
-    },
-
-    containerEncabezado: {
-      //! para cambiar el color backgroundColor: "red",
-      height: "10%",
-      display: "flex",
-      justifyContent: "end",
-    },
-
-    containerFormulario: {
-      backgroundColor: "blue",
-      overflowX: "scroll",
-      height: "82%",
-      boxShadow: "0px 5px 5px 0px black",
-      backgroundColor: "white",
-      border: "1px solid black",
-      borderRadius: "5px",
-    },
-
-    listaNormas: {
-      backgroundColor: contador === 2 ? "white" : "rgb(0,164,228)",
-      color: contador === 2 ? "black" : "white",
-      border: contador === 2 ? "1px solid black" : "",
-      width: "150px",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      fontFamily: "'Nunito Sans', sans-serif",
-      borderRadius: "5px 5px 0px 0px",
-      cursor: "pointer",
-      "&:hover": {
-        backgroundColor: "white",
-        color: "black",
-        border: "1px solid black",
-      },
-    },
-
-    crearNorma: {
-      backgroundColor: contador === 1 ? "rgb(0,164,228)" : "rgb(0,164,228)",
-      color: contador === 1 ? "white" : "white",
-      // border: contador === 1 ? "1px solid black" : "",
-      width: "150px",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      fontFamily: "'Nunito Sans', sans-serif",
-      borderRadius: "5px 0px 0px 0px",
-      cursor: "pointer",
-    },
-
-    containerGrid: {
-      //!backgroundColor: "red",
-      width: "90%",
-      marginLeft: "5%",
-      overflowX: "scroll",
-    },
-
-    titulo: {
-      width: "50%",
-      marginLeft: "25%",
-      fontFamily: "'Nunito Sans', sans-serif",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      paddingTop: "20px",
-      borderBottom: "3px solid black",
-    },
-
-    vistaFormulario: {
-      display: contador === 1 ? "block" : "none",
-    },
-
-    vistaNormas: {
-      display: contador === 2 ? "flex" : "none",
-      height: "100%",
-    },
-
-    guardar: {
-      width: "95%",
-      marginLeft: "2.5%",
-      marginTop: "20px",
-      marginBottom: "20px",
-      backgroundColor: "rgb(0, 164, 228)",
-      "&:hover": {
-        backgroundColor: "rgb(0, 164, 228)",
-      },
-    },
-  };
-
   const InfoGeneral = [
     {
       nombre: "Nombre de la norma",
@@ -480,6 +388,191 @@ function EditarNorma() {
     },
   ];
 
+  const styles = {
+    generalContainer: {
+      overflowX: "hidden",
+      height: "100vh",
+    },
+
+    mainBox: {
+      //! para cambiar el color backgroundColor: "pink",
+      height: "87%",
+      width: "90%",
+      marginTop: "10px",
+      marginLeft: "5%",
+      transition: "ease 0.3s",
+      transform:
+        mover || moverUsuario || moverParametros || moverQuimicos || moverPerfil
+          ? "translateY( 190px)"
+          : "translateY(0px)",
+    },
+
+    containerEncabezado: {
+      //! para cambiar el color backgroundColor: "red",
+      height: "10%",
+      display: "flex",
+      justifyContent: "space-between",
+    },
+
+    containerFormulario: {
+      backgroundColor: "blue",
+      overflowX: "scroll",
+      height: "82%",
+      boxShadow: "0px 5px 5px 0px black",
+      backgroundColor: "white",
+      border: "1px solid black",
+      borderRadius: "5px",
+    },
+
+    listaNormas: {
+      backgroundColor: contador === 2 ? "white" : "rgb(0,164,228)",
+      color: contador === 2 ? "black" : "white",
+      border: contador === 2 ? "1px solid black" : "1px solid white",
+      width: "150px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontFamily: "'Nunito Sans', sans-serif",
+      borderRadius: "5px 0px 0px 0px",
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: "white",
+        color: "black",
+        border: "1px solid black",
+      },
+    },
+
+    normas: {
+      backgroundColor: contador === 1 ? "white" : "rgb(0,164,228)",
+      color: contador === 1 ? "black" : "white",
+      border: contador === 1 ? "1px solid black" : "1px solid white",
+      width: "150px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontFamily: "'Nunito Sans', sans-serif",
+      borderRadius: "0px 5px 0px 0px",
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: "white",
+        color: "black",
+        border: "1px solid black",
+      },
+    },
+
+    crearNorma: {
+      backgroundColor: "rgb(0,164,228)",
+      color: "white",
+      // border: contador === 1 ? "1px solid black" : "",
+      width: "150px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontFamily: "'Nunito Sans', sans-serif",
+      borderRadius: "5px 0px 0px 0px",
+      cursor: "pointer",
+    },
+
+    containerGrid: {
+      //!backgroundColor: "red",
+      width: "90%",
+      marginLeft: "5%",
+      overflowX: "scroll",
+    },
+
+    titulo: {
+      width: "50%",
+      marginLeft: "25%",
+      fontFamily: "'Nunito Sans', sans-serif",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingTop: "20px",
+      borderBottom: "3px solid black",
+    },
+
+    vistaFormulario: {
+      display: contador === 1 ? "block" : "none",
+    },
+
+    vistaNormas: {
+      display: contador === 2 ? "flex" : "none",
+      height: "100%",
+    },
+
+    guardar: {
+      width: "89%",
+      marginLeft: "6.2%",
+      marginTop: "20px",
+      marginBottom: "20px",
+      backgroundColor: "rgb(0, 164, 228)",
+      "&:hover": {
+        backgroundColor: "rgb(0, 164, 228)",
+      },
+    },
+  };
+
+  const crearNorma = async () => {
+    setDeshabilitar(true);
+
+    const response = await fetch(
+      "https://treea-piscinas-api.vercel.app/v1/parameterization",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "x-token": localStorage.getItem("clave"),
+          "Content-Type": "application/json", // Añadido Content-Type
+        },
+        body: JSON.stringify({
+          typeValidation: "Manual",
+          // normativityId: idNorma,
+          parameters: data.parameter,
+          poolId: valuPisicna,
+        }),
+      }
+    );
+
+    switch (response.status) {
+      case 200:
+        const result = await response.json();
+        console.log(result);
+        setOpen(true);
+        setMensaje("Parametros Asignados exitosamente!");
+        setColor("success");
+        setDeshabilitar(false);
+
+        break;
+
+      case 400:
+        console.log(await response.json());
+        setOpen(true);
+        setMensaje("Todos los campos son obligatorios");
+        setColor("error");
+        setDeshabilitar(false);
+
+        break;
+
+      case 401:
+        console.log(await response.json());
+        setOpen(true);
+        setMensaje("Token no valido");
+        setColor("error");
+        setDeshabilitar(false);
+
+        break;
+    }
+
+    try {
+    } catch (error) {
+      console.log(error);
+      setOpen(true);
+      setMensaje("Error en el servidor");
+      setColor("error");
+      setDeshabilitar(false);
+    }
+  };
+
   useEffect(() => {
     listarParametros();
   }, []);
@@ -490,13 +583,8 @@ function EditarNorma() {
   }, [reload]);
 
   useEffect(() => {
-    listarNormaId(id);
+    listarPiscinas();
   }, []);
-
-  useEffect(() => {
-    // Verifica que la información se haya cargado correctamente en el estado
-    console.log(data);
-  }, [data]);
 
   return (
     <Box sx={{ ...styles.generalContainer }}>
@@ -509,29 +597,79 @@ function EditarNorma() {
       ></SearchAppBar>
       <Box sx={{ ...styles.mainBox }}>
         <Box sx={{ ...styles.containerEncabezado }}>
-          {/* <Typography
-            sx={{ ...styles.listaNormas }}
-            onClick={() => setContador(2)}
-          >
-            lista de normas
-          </Typography> */}
+          <Box sx={{ display: "flex" }}>
+            <Typography
+              sx={{ ...styles.listaNormas }}
+              onClick={() => setContador(2)}
+            >
+              Parámetros
+            </Typography>
+            <Typography
+              sx={{ ...styles.normas }}
+              onClick={() => setContador(1)}
+            >
+              Normas
+            </Typography>
+          </Box>
           <Typography
             sx={{ ...styles.crearNorma }}
-            onClick={() => setContador(1)}
+            onClick={() => setContador(3)}
           >
-            Editar norma
+            Crear norma
           </Typography>
         </Box>
         <Box sx={{ ...styles.containerFormulario }}>
           <Box sx={{ ...styles.containerGrid }}>
             <Box sx={{ ...styles.vistaFormulario }}>
-              <Box sx={{ ...styles.titulo }}>Informacion geenral</Box>
+              <Grid container spacing={2} style={{ paddingTop: "30px" }}>
+                <Grid item xs={12}>
+                  <InputSelect
+                    onChange={(e) => obtenerIdNorma(e.target.textContent)}
+                    options={listaNormas}
+                    icon={<Pool></Pool>}
+                    label="Listado de normas"
+                    placeholder="Seleccione una norma"
+                  ></InputSelect>
+                </Grid>
+                <Grid item xs={12}>
+                  <InputSelect
+                    onChange={(e) => obtenerIdPiscina(e.target.textContent)}
+                    options={optionsPiscinas}
+                    icon={<Pool></Pool>}
+                    label="Listado de Piscinas"
+                    placeholder="Seleccione una norma"
+                  ></InputSelect>
+                </Grid>
+                <Grid item xs={12}></Grid>
+
+                <Grid item xs={12}>
+                  <Button
+                    variant="contained"
+                    style={{ ...styles.guardar }}
+                    onClick={asignarNorma}
+                  >
+                    Guardar
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+          <Box sx={{ ...styles.vistaNormas }}>
+            <Box>
               <Grid container>
+                <Grid item xs={12}>
+                  <InputSelect
+                    onChange={(e) => obtenerIdPiscina(e.target.textContent)}
+                    options={optionsPiscinas}
+                    icon={<Pool></Pool>}
+                    label="Listado de Piscinas"
+                    placeholder="Seleccione una norma"
+                  ></InputSelect>
+                </Grid>
                 {InfoGeneral.map((elemento, index) =>
                   elemento.typo === "text" ? (
                     <Grid item xs={12} sm={12} md={4} key={elemento.nombre}>
                       <InputGeneral
-                        value={elemento.value}
                         name={elemento.name}
                         onChange={catchData}
                         label={elemento.nombre}
@@ -541,7 +679,6 @@ function EditarNorma() {
                   ) : (
                     <Grid item xs={12} sm={12} md={4} key={elemento.nombre}>
                       <InputSelect
-                        value={{ label: elemento.value }}
                         onChange={(e) => catchDataSelect(e.target.textContent)}
                         options={listaOpciones}
                         label={elemento.nombre}
@@ -578,7 +715,7 @@ function EditarNorma() {
                         <InputGeneral
                           icon={<Pool></Pool>}
                           label="Parámetro"
-                          value={elemento.name}
+                          value={elemento.parameter}
                           name="name"
                           onChange={(e) =>
                             catchDataParametros(
@@ -591,7 +728,6 @@ function EditarNorma() {
                       </Grid>
                       <Grid item xs={12} sm={12} md={6}>
                         <InputSelect
-                          value={{ label: elemento.specification }}
                           icon={<Pool></Pool>}
                           label="Especificación"
                           options={listaEspecificaciones}
@@ -639,7 +775,7 @@ function EditarNorma() {
                       {elemento.specification === "Valor maximo" && (
                         <Grid item xs={12} sm={6}>
                           <InputGeneral
-                            value={elemento.maxValueSpecification}
+                            value={elemento.maximo}
                             icon={<Pool></Pool>}
                             label="Máximo"
                             name="maxValueSpecification"
@@ -680,7 +816,7 @@ function EditarNorma() {
                     sx={{
                       ...styles.guardar,
                     }}
-                    onClick={() => crearNorma(data._id)}
+                    onClick={crearNorma}
                     variant="contained"
                     disabled={deshabilitar}
                   >
@@ -697,16 +833,6 @@ function EditarNorma() {
               </Grid>
             </Box>
           </Box>
-          <Box sx={{ ...styles.vistaNormas }}>
-            <Tabla
-              reloadData={handleReloadData}
-              data={
-                listaParametros.length === 0
-                  ? ""
-                  : listaParametros.normativities
-              }
-            ></Tabla>
-          </Box>
         </Box>
       </Box>
       <Alertas
@@ -719,4 +845,4 @@ function EditarNorma() {
   );
 }
 
-export default EditarNorma;
+export default AsignarParametros;

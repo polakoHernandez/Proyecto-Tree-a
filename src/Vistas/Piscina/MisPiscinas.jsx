@@ -7,6 +7,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import SliderHorizontal from "../../Componentes/General/SliderHorizontal";
 import SliderVertical from "../../Componentes/General/SliderVertical";
 import { Girl } from "@mui/icons-material";
+import { useLocation } from "react-router-dom";
 
 function MisPiscinas() {
   // Estado ara guardar los datos del formulario
@@ -50,6 +51,8 @@ function MisPiscinas() {
   //   fichaTecnicaCalentador: "",
   // });
 
+  const location = useLocation();
+  const idProp = new URLSearchParams(location.search).get("idProp");
   const [data, setData] = useState("");
   const [pool, setPool] = useState("");
   const [cargando, setCargando] = useState(false);
@@ -141,17 +144,18 @@ function MisPiscinas() {
           console.log(responeData);
           setData(responeData);
           setCargando(false);
+
           break;
       }
     } catch (error) {
       setCargando(false);
-      alert("error");
+      console.error("Error during data fetching:", error);
       // setOpenModal(true);
     }
     setCargando(false);
   };
 
-  const obetnerId = (idPool) => {
+  const obetnerId = async (idPool) => {
     const respuesta = data.poolCreatedByUser.find(
       (element) => element._id === idPool
     );
@@ -160,6 +164,7 @@ function MisPiscinas() {
 
   useEffect(() => {
     listaDeMisPiscinas();
+
     // setReload(false); // Reset reload flag
   }, []);
 

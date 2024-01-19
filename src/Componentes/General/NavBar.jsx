@@ -484,6 +484,7 @@ export default function SearchAppBar({
                 <ChevronRightIcon></ChevronRightIcon>
               </ListItemButton>
               <ListItemButton
+                onClick={() => navigate("/asignarParametros")}
                 sx={{
                   pl: 4,
                   // "&:hover": {
@@ -755,6 +756,7 @@ export default function SearchAppBar({
                 <ChevronRightIcon sx={{ color: "white" }}></ChevronRightIcon>
               </ListItemButton>
               <ListItemButton
+                onClick={() => navigate("/verNotificaciones")}
                 sx={{
                   pl: 4,
                   borderBottom: "1px solid white",

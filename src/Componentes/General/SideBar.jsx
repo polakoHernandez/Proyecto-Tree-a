@@ -368,6 +368,7 @@ export default function TemporaryDrawer({ abrirDrawer, cerraDrawer }) {
             <Collapse in={openParam} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
+                  onClick={() => navigate("/asignarParametros")}
                   sx={{
                     pl: 4,
                     "&:hover": {
@@ -596,6 +597,7 @@ export default function TemporaryDrawer({ abrirDrawer, cerraDrawer }) {
             <Collapse in={openPerfil} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
+                  onClick={() => navigate("/verNotificaciones")}
                   sx={{
                     pl: 4,
                     "&:hover": {

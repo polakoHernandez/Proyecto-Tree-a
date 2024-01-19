@@ -17,6 +17,7 @@
     "@mui/material": "^5.14.20",
     "@mui/styled-engine-sc": "^6.0.0-alpha.7",
     "@mui/x-data-grid": "^6.18.4",
+    "push.js": "^1.0.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-glider": "^4.0.2",
@@ -24,7 +25,8 @@
     "react-slick": "^0.29.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.1",
-    "swiper": "^11.0.5"
+    "swiper": "^11.0.5",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

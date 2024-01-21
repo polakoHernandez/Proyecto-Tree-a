@@ -729,7 +729,7 @@ function GestionarPiscinas() {
                             >
                               Profundidad A (m)
                             </Typography>
-                            <Typography>{pool.depth.depthA}</Typography>
+                            {/* <Typography>{pool.depth.depthA}</Typography> */}
                           </Grid>
 
                           <Grid item xs={4} sx={{ textAlign: "center" }}>
@@ -738,7 +738,7 @@ function GestionarPiscinas() {
                             >
                               Profundidad B (m)
                             </Typography>
-                            <Typography>{pool.depth.depthB}</Typography>
+                            {/* <Typography>{pool.depth.depthB}</Typography> */}
                           </Grid>
 
                           <Grid item xs={4} sx={{ textAlign: "center" }}>
@@ -747,7 +747,7 @@ function GestionarPiscinas() {
                             >
                               Profundidad C (m)
                             </Typography>
-                            <Typography>{pool.depth.depthC}</Typography>
+                            {/* <Typography>{pool.depth.depthC}</Typography> */}
                           </Grid>
 
                           <Grid item xs={4} sx={{ textAlign: "center" }}>
